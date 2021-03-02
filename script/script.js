@@ -27,22 +27,22 @@ window.addEventListener('DOMContentLoaded', function () {
       let timer = getTimeRemaining();
       console.log('timer: ', timer);
 
-      timerHours.textContent = timer.hours;
-      timerMinuts.textContent = timer.minutes;
-      timerSeconds.textContent = timer.seconds;
-
       if (timer.timeRemaining > 0) {
-        // * рекурсивно вызываем через 1с
-        // setTimeout(updateClock, 1000);
-        setInterval(updateClock, 1000); // !!!! рекурсивно вызывать можно только setTimeout()
+        timerHours.textContent = timer.hours;
+        timerMinuts.textContent = (timer.minutes < 10 ? '0' : '') + timer.minutes;
+        timerSeconds.textContent = (timer.seconds < 10 ? '0' : '') + timer.seconds;
+      } else {
+        timerHours.textContent = 0;
+        timerMinuts.textContent = 0;
+        timerSeconds.textContent = 0;
       }
     }
-    
-    // * запускаем ОДИН раз
+
+    // * запускаем ОДИН раз, один раз планируем вызов
     // todo переделать через setInterval()
-    updateClock();
+    setInterval(updateClock, 1000);
   }
 
   //тест таймера
-  countTimer('04/01/2021');
+  countTimer('04/01/2020');
 });
