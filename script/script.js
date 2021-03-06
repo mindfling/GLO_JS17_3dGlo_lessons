@@ -1,6 +1,8 @@
+// запуск после загрузки страници тоже что и defer
 window.addEventListener('DOMContentLoaded', function () {
   'use strict';
-  console.log('hello');
+  console.log('hello\nthis is 3dGLO');
+
 
   //Timer
   function countTimer(deadline) {
@@ -32,6 +34,7 @@ window.addEventListener('DOMContentLoaded', function () {
         timerMinuts.textContent = (timer.minutes < 10 ? '0' : '') + timer.minutes;
         timerSeconds.textContent = (timer.seconds < 10 ? '0' : '') + timer.seconds;
       } else {
+        // * напоминалка если дата уже прошла то обратный таймер уже по нулям
         timerHours.textContent = 0;
         timerMinuts.textContent = 0;
         timerSeconds.textContent = 0;
@@ -39,10 +42,10 @@ window.addEventListener('DOMContentLoaded', function () {
     }
 
     // * запускаем ОДИН раз, один раз планируем вызов
-    // todo переделать через setInterval()
+    // * переделываем через setInterval() по сути тот же setTimeout() с рекурсией
     setInterval(updateClock, 1000);
   }
 
   //тест таймера
-  countTimer('04/01/2020');
+  countTimer('9 13 2021');
 });

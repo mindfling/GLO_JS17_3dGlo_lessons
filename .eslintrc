@@ -1,9 +1,10 @@
-{
+{ 
   "env": {
     "browser": true,
     "es6": true,
     "node": false
   },
+  
   "extends": "eslint:recommended",
   "parserOptions": {
     "ecmaVersion": 2020,
@@ -255,3 +256,4 @@
     ]
   }
 }
+
