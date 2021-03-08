@@ -7,13 +7,13 @@ window.addEventListener('DOMContentLoaded', () => {
   //! Timer ДЗ 18
   //* функция получает строку времени в формате mm/dd/yyyy
   //* анимирует таймер сколько времени осталось до этой даты
-  const countTimer = deadline => {
-    //получаем элементы один раз поля таймера
-    let timerHours = document.querySelector('#timer-hours'),
-      timerMinuts = document.querySelector('#timer-minutes'),
-      timerSeconds = document.querySelector('#timer-seconds');
-
-    //! сюда всё что вычисляется
+  const countTimer = (deadline) => {
+    //получаем элементы один раз
+    let timerHours = document.querySelector('#timer-hours');
+    let timerMinuts = document.querySelector('#timer-minutes');
+    let timerSeconds = document.querySelector('#timer-seconds');
+    let interval = null;
+    // сюда всё что вычисляется по времени
     const getTimeRemaining = () => {
       let dateStop = new Date(deadline).getTime(); //будущ дата
       let dateNow = new Date().getTime(); //текущ дата
@@ -21,33 +21,51 @@ window.addEventListener('DOMContentLoaded', () => {
 
       let seconds = Math.floor(timeRemaining % 60); // sec
       let minutes = Math.floor((timeRemaining / 60) % 60); //min
-      let hours = Math.floor((timeRemaining / 60 / 60) % 24); // hours
+      // let hours = Math.floor((timeRemaining / 60 / 60) % 24); //????? hours
+      let hours = Math.floor(timeRemaining / 60 / 60); // hours
 
-      return {timeRemaining, hours, minutes, seconds};
+      return {
+        timeRemaining,
+        hours,
+        minutes,
+        seconds
+      };
     };
 
-    //обновление таймера
+    //колличество обновлений таймера
+    let checktimerclock = 0;
+
     const updateClock = () => {
       let timer = getTimeRemaining();
-      console.log('timer: ', timer);
+      // console.log('timer: ', timer);
 
+      //* addZero (numb) when 0 <= 9
       if (timer.timeRemaining > 0) {
-        timerHours.textContent = timer.hours;
+
+        timerHours.textContent = (timer.hours < 10 ? '0' : '') + timer.hours;
         timerMinuts.textContent = (timer.minutes < 10 ? '0' : '') + timer.minutes;
         timerSeconds.textContent = (timer.seconds < 10 ? '0' : '') + timer.seconds;
+
       } else {
-        // * напоминалка если дата уже прошла то обратный таймер уже по нулям
+
+        // * если дата уже прошла то обратный таймер отображает по нулям
         timerHours.textContent = '00';
         timerMinuts.textContent = '00';
         timerSeconds.textContent = '00';
+        clearInterval(interval);
       }
+
+      console.log('checktimerclock: ', checktimerclock++);
     };
 
-    // * запускаем ОДИН раз, один раз планируем вызов
-    // * переделываем через setInterval() по сути тот же setTimeout() с рекурсией
-    setInterval(updateClock, 1000); // 1 sec
-  };
 
-  //тест таймера сколько часов остается до дня программиста
+    // * запускаем 1й раз, без задержки
+    updateClock();
+    // * запускаем через setInterval() будет срабатывать через каждую 1с по сути тот же setTimeout() с рекурсией 
+    interval = setInterval(updateClock, 1000);
+  };
+  //тест таймера
   countTimer('9 13 2021');
+  // countTimer('3 8 2021 17:52:00'); // TODO TEST
+
 });
