@@ -4,60 +4,6 @@ window.addEventListener('DOMContentLoaded', function () {
   // ! Lesson 19
   console.log('hello\nthis is 3dGLO');
 
-  // Menu
-  const toggleMenu = (event) => {
-    
-    const btnMenu = document.querySelector('.menu');
-    const menu = document.querySelector('menu');
-    const closeBtn = document.querySelector('.close-btn');
-    const menuItems = menu.querySelectorAll('ul>li');
-    console.log('menu: ', menu);
-    console.log('menuItems: ', menuItems);
-    
-    const handlerMenu = (event) => {
-
-      if (!menu.style.transform || menu.style.transform === 'translate(-100%)') {
-        console.log("тогда открыть меню");
-        menu.style.transform = 'translate(0)';
-      } else {
-        menu.style.transform = 'translate(-100%)';
-      }
-
-      console.log();
-    };
-
-    btnMenu.addEventListener('click', (event) => {
-      //? menu скрыто через transform
-
-      // if (!menu.style.transform || menu.style.transform === 'translate(-100%)') {
-      //   console.log("тогда открыть меню");
-      //   menu.style.transform = 'translate(0)';
-      // } else {
-      //   menu.style.transform = 'translate(-100%)';
-      // }
-
-      handlerMenu();
-
-    });
-
-    closeBtn.addEventListener('click', (event) => {
-      menu.style.transform = 'translate(-100%)';
-    });
-    
-    // for (let i = 0; i < menuItems.length; i++) {
-    //   menuItems[i].addEventListener('click', (event) => {
-    //     handlerMenu();
-    //   });
-    // };
-
-    menuItems.forEach( item => item.addEventListener('click', handlerMenu));
-
-    console.log();
-  };
-  toggleMenu();
-
-
-
   //Timer
   // TODO переделать в ES6
   const countTimer = (deadline) => {
@@ -66,7 +12,7 @@ window.addEventListener('DOMContentLoaded', function () {
       timerMinuts = document.querySelector('#timer-minutes'),
       timerSeconds = document.querySelector('#timer-seconds');
 
-    // сюда всё что вычисляется
+    // сюда всё что вычисляется по времени
     const getTimeRemaining = () => {
       let dateStop = new Date(deadline).getTime(); //будущ дата
       let dateNow = new Date().getTime(); //текущ дата
@@ -74,15 +20,16 @@ window.addEventListener('DOMContentLoaded', function () {
 
       let seconds = Math.floor(timeRemaining % 60); // sec
       let minutes = Math.floor((timeRemaining / 60) % 60); //min
-      let hours = Math.floor((timeRemaining / 60 / 60) % 24); // hours
+      // let hours = Math.floor((timeRemaining / 60 / 60) % 24); // hours
+      let hours = Math.floor(timeRemaining / 60 / 60); // hours
 
-      return {timeRemaining, hours, minutes, seconds};
+      return { timeRemaining, hours, minutes, seconds };
     };
 
     //обновление таймера
     const updateClock = () => {
       let timer = getTimeRemaining();
-      console.log('timer: ', timer);
+      // console.log('timer: ', timer);
 
       // TODO addZero (numb) when 0 <= 9
 
@@ -104,7 +51,75 @@ window.addEventListener('DOMContentLoaded', function () {
     // * переделываем через setInterval() по сути тот же setTimeout() с рекурсией
     setInterval(updateClock, 1000);
   };
-
   //тест таймера
-  countTimer('9 13 2021');
-});
+  countTimer('9 13 2021'); 
+  
+  
+  
+  
+  // Main Menu
+  const toggleMenu = (event) => {
+    
+    const btnMenu = document.querySelector('.menu');
+    const menu = document.querySelector('menu');
+    const closeBtn = document.querySelector('.close-btn');
+    const menuItems = menu.querySelectorAll('ul>li');
+    
+    // todo make it by js
+    //? const handlerMenu = (event) => {
+    //?   if (!menu.style.transform || menu.style.transform === 'translate(-100%)') {
+    //?     console.log("тогда открыть меню");
+    //?     menu.style.transform = 'translate(0)';
+    //?   } else {
+    //?     menu.style.transform = 'translate(-100%)';
+    //?   }
+    //? };
+    
+    // todo make it by css
+    const handlerMenu = () => {
+      // console.log(event.target);
+      // alert('menu');
+      console.log('menu');
+      menu.classList.toggle('active-menu');
+    };
+      
+    btnMenu.addEventListener('click', handlerMenu);
+    closeBtn.addEventListener('click', handlerMenu);
+    menuItems.forEach( (item) => item.addEventListener('click', handlerMenu) );
+  };
+  toggleMenu();
+
+
+
+
+  const togglePopUp = () => {
+
+    const popup = document.querySelector('.popup');
+    const popupBtn = document.querySelectorAll('.popup-btn');    
+    const buttonPopupClose = document.querySelector('.popup-close');
+    
+ 
+    const showPopupMenu = (event) => {
+      popup.style.display = 'block';
+      return ;
+    }
+
+    const closePopupMenu = (event) => {
+      popup.style.display = 'none';
+      return ;
+    }
+
+    
+    
+    popupBtn.forEach( (elem) => {
+      elem.addEventListener( 'click', showPopupMenu);
+    });
+ 
+    buttonPopupClose.addEventListener('click', () =>  closePopupMenu());
+  };
+  togglePopUp();
+
+
+
+
+}); // * DOMContentLoaded *
