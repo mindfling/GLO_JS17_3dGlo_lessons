@@ -4,51 +4,52 @@ window.addEventListener('DOMContentLoaded', function () {
   // ! Lesson 19
   console.log('hello\nthis is 3dGLO');
 
+
   //Timer
   // TODO переделать в ES6
   const countTimer = (deadline) => {
     //получаем элементы один раз
-    let timerHours = document.querySelector('#timer-hours'),
-      timerMinuts = document.querySelector('#timer-minutes'),
-      timerSeconds = document.querySelector('#timer-seconds');
+    const timerHours = document.querySelector('#timer-hours');
+    const timerMinuts = document.querySelector('#timer-minutes');
+    const timerSeconds = document.querySelector('#timer-seconds');
 
+    const addZero = (numb) => {
+      return numb >= 0 && numb < 10 ? '0' + numb : numb;
+    };
+    
     // сюда всё что вычисляется по времени
     const getTimeRemaining = () => {
-      let dateStop = new Date(deadline).getTime(); //будущ дата
-      let dateNow = new Date().getTime(); //текущ дата
-      let timeRemaining = (dateStop - dateNow) / 1000; //ms/1000 = sec
+      const dateStop = new Date(deadline).getTime(); //будущ дата
+      const dateNow = new Date().getTime(); //текущ дата
+      const timeRemaining = (dateStop - dateNow) / 1000; //ms/1000 = sec
 
-      let seconds = Math.floor(timeRemaining % 60); // sec
-      let minutes = Math.floor((timeRemaining / 60) % 60); //min
+      const seconds = Math.floor(timeRemaining % 60); // sec
+      const minutes = Math.floor((timeRemaining / 60) % 60); //min
       // let hours = Math.floor((timeRemaining / 60 / 60) % 24); // hours
-      let hours = Math.floor(timeRemaining / 60 / 60); // hours
+      const hours = Math.floor(timeRemaining / 60 / 60); // hours
 
       return { timeRemaining, hours, minutes, seconds };
     };
 
+
     //обновление таймера
     const updateClock = () => {
-      let timer = getTimeRemaining();
-      // console.log('timer: ', timer);
-
-      // TODO addZero (numb) when 0 <= 9
+      const timer = getTimeRemaining();
 
       if (timer.timeRemaining > 0) {
         timerHours.textContent = timer.hours;
-        timerMinuts.textContent =
-          (timer.minutes < 10 ? '0' : '') + timer.minutes;
-        timerSeconds.textContent =
-          (timer.seconds < 10 ? '0' : '') + timer.seconds;
+        timerMinuts.textContent = addZero(timer.minutes);
+        timerSeconds.textContent = addZero(timer.seconds);
       } else {
-        // * напоминалка если дата уже прошла то обратный таймер уже по нулям
-        timerHours.textContent = 0;
-        timerMinuts.textContent = 0;
-        timerSeconds.textContent = 0;
+        timerHours.textContent = '00';
+        timerMinuts.textContent = '00';
+        timerSeconds.textContent = '00';
       }
     };
 
     // * запускаем ОДИН раз, один раз планируем вызов
-    // * переделываем через setInterval() по сути тот же setTimeout() с рекурсией
+    updateClock();
+    // * переделываем через setInterval() запускается через каждые 1000 мс
     setInterval(updateClock, 1000);
   };
   //тест таймера
@@ -63,59 +64,54 @@ window.addEventListener('DOMContentLoaded', function () {
     const btnMenu = document.querySelector('.menu');
     const menu = document.querySelector('menu');
     const closeBtn = document.querySelector('.close-btn');
-    const menuItems = menu.querySelectorAll('ul>li');
+    const menuItems = menu.querySelectorAll('ul>li'); //коллекция всех элементов подменю
     
-    // todo make it by js
+    // todo make it by js 
     //? const handlerMenu = (event) => {
+      //пока меню спрятано влево на -100%
     //?   if (!menu.style.transform || menu.style.transform === 'translate(-100%)') {
-    //?     console.log("тогда открыть меню");
+      //показать меню слева
     //?     menu.style.transform = 'translate(0)';
     //?   } else {
+      //закрыть меню спрятать влево
     //?     menu.style.transform = 'translate(-100%)';
     //?   }
     //? };
     
     // todo make it by css
     const handlerMenu = () => {
-      // console.log(event.target);
-      // alert('menu');
       console.log('menu');
       menu.classList.toggle('active-menu');
     };
       
-    btnMenu.addEventListener('click', handlerMenu);
-    closeBtn.addEventListener('click', handlerMenu);
-    menuItems.forEach( (item) => item.addEventListener('click', handlerMenu) );
+    btnMenu.addEventListener('click', handlerMenu); //клик по кнопке .menu
+    closeBtn.addEventListener('click', handlerMenu); //клик по кнопке закрыть
+    menuItems.forEach( (menuItem) => menuItem.addEventListener('click', handlerMenu) ); //клик по ВСЕМ элементам подменю
   };
   toggleMenu();
 
 
 
-
+//Popup
   const togglePopUp = () => {
 
-    const popup = document.querySelector('.popup');
-    const popupBtn = document.querySelectorAll('.popup-btn');    
-    const buttonPopupClose = document.querySelector('.popup-close');
-    
- 
+    const popup = document.querySelector('.popup'); //popup окно
+    const popupBtn = document.querySelectorAll('.popup-btn'); //кнопки на странице .popup-btn для открытия окна
+    const popupClose = document.querySelector('.popup-close'); //кнопка закрытия окна
+     
     const showPopupMenu = (event) => {
       popup.style.display = 'block';
-      return ;
-    }
+    };
 
     const closePopupMenu = (event) => {
       popup.style.display = 'none';
-      return ;
-    }
-
+    };
     
-    
-    popupBtn.forEach( (elem) => {
+    popupBtn.forEach( (elem) => { //навесить на все кнопки событие открыть popup окно
       elem.addEventListener( 'click', showPopupMenu);
     });
  
-    buttonPopupClose.addEventListener('click', () =>  closePopupMenu());
+    popupClose.addEventListener('click', () =>  closePopupMenu()); //навесить событие закрыть окно
   };
   togglePopUp();
 
