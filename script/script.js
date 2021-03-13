@@ -1,7 +1,7 @@
 // запуск после загрузки страници тоже что и defer
 window.addEventListener('DOMContentLoaded', function () {
   'use strict';
-  // ! Lesson 19
+  // ! Lesson 20
   console.log('This is 3dGLO');
 
   //Timer
@@ -52,11 +52,7 @@ window.addEventListener('DOMContentLoaded', function () {
   //тест таймера на дату день программиста 256 день в году
   countTimer('9 13 2021');
 
-
-
-
-  //! ДЗ 19
-  // Main Menu 
+  // Main Menu
   const toggleMenu = (event) => {
     const btnMenu = document.querySelector('.menu');
     const menu = document.querySelector('menu');
@@ -71,7 +67,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
     //! плавная анимация главного меню by js
     const handlerMenu = (event) => {
-
       const showMenuAnimate = () => {
         // * анимируем меню двигаем слева translateX(%)
         let count = 0; //счетчик анимаций
@@ -114,7 +109,6 @@ window.addEventListener('DOMContentLoaded', function () {
   };
   toggleMenu();
 
-  //! ДЗ 19
   //Popup
   const togglePopUp = () => {
     const popup = document.querySelector('.popup'); //popup окно
@@ -212,4 +206,47 @@ window.addEventListener('DOMContentLoaded', function () {
     popupContent.style.left = 50 - (310 * 50) / window.innerWidth + '%';
   };
   togglePopUp();
+
+  //! ДЗ 20 use делегирование
+  //Tabs
+  const tabs = () => {
+    const tabHeader = document.querySelector('.service-header');
+    const tab = tabHeader.querySelectorAll('.service-header-tab');
+    const tabContent = document.querySelectorAll('.service-tab');
+
+    //! функция выставляет видимым заданый таб
+    const selectTab = (select) => {   // * toggle tab content
+      tab.forEach((item, i) => {
+        if (i === select) {
+          item.classList.add('active');
+          tabContent[i].classList.remove('d-none');
+        } else {
+          item.classList.remove('active');
+          tabContent[i].classList.add('d-none');
+        }
+      });
+    };
+    //? выставляем начальные классы у табов
+    selectTab(2);
+
+    //* вешаем обработчик событий
+    tabHeader.addEventListener('click', (event) => {
+      let target = event.target.closest('.service-header-tab');
+      console.log(target);
+
+      // пробегаем по всем табам
+      tab.forEach((item, i) => {
+        //находим там совпадающий с кликнутым используем его номер
+        if (item === target) {
+          console.log('this tab is', i);
+          //устанавливаем видимым только этот таб
+          selectTab(i);
+        }
+      });
+    });
+  };
+  tabs();
+
+
+
 }); // * DOMContentLoaded *
