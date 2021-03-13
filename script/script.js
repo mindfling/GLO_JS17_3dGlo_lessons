@@ -24,7 +24,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
       const seconds = Math.floor(timeRemaining % 60); // sec
       const minutes = Math.floor((timeRemaining / 60) % 60); //min
-      // let hours = Math.floor((timeRemaining / 60 / 60) % 24); // hours
+      // let hours = Math.floor((timeRemaining / 60 / 60) % 24); //? hours свериться с ТЗ
       const hours = Math.floor(timeRemaining / 60 / 60); // hours
 
       return {timeRemaining, hours, minutes, seconds};
@@ -49,26 +49,21 @@ window.addEventListener('DOMContentLoaded', function () {
     updateClock(); // * запускаем ОДИН раз без таймера
     setInterval(updateClock, 1000); // * переделываем через setInterval() запускается через каждые 1000 мс
   };
-  //тест таймера
+  //тест таймера на дату день программиста 256 день в году
   countTimer('9 13 2021');
 
-  // Main Menu //! ДЗ 19
+
+
+
+  //! ДЗ 19
+  // Main Menu 
   const toggleMenu = (event) => {
     const btnMenu = document.querySelector('.menu');
     const menu = document.querySelector('menu');
     const closeBtn = document.querySelector('.close-btn');
     const menuItems = menu.querySelectorAll('ul>li'); //коллекция всех элементов подменю
 
-    // todo make it by js
-    // const handlerMenu = (event) => {
-    //   if (!menu.style.transform || menu.style.transform === 'translateX(-100%)') {
-    //     menu.style.transform = 'translateX(100%)'; //! если меню скрыто - открываем
-    //   } else {
-    //     menu.style.transform = 'translateX(-100%)'; //! если меню открыто - то скрываем
-    //   }
-    // };
-
-    // todo make it by css
+    // todo простая анимация make it by css
     // const handlerMenu = () => {
     //   console.log('menu');
     //   menu.classList.toggle('active-menu');
@@ -76,7 +71,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
     //! плавная анимация главного меню by js
     const handlerMenu = (event) => {
-      // let time2, time0 = (new Date()).getTime(); //todo time test
 
       const showMenuAnimate = () => {
         // * анимируем меню двигаем слева translateX(%)
@@ -86,12 +80,8 @@ window.addEventListener('DOMContentLoaded', function () {
           count++;
           menuPercent = 150 - (650 / (count + 110)) ** 3; //* подбираем параметры сдвига меню чисто Имперически
           menu.style.transform = `translateX(${menuPercent}%)`;
-
-          // menuPercent = 140 - (650 / (count+100) )**3; ////!
-          // menuPercent = 120 - (650 / (count+62) )**2; //!
-          // menuPercent = 120 - 1 / ( ((count+65)/700) ** 2 );
-          // menuPercent = -100 + (count**3 / 375);
-          // menuPercent = 100 - (1 / (100-count*10));
+          // menuPercent = 140 - (650 / (count+100) )**3; //? другой вариант
+          // menuPercent = 120 - (650 / (count+62) )**2; //? еще вариант
 
           if (menuPercent > 100 || count > 200) {
             //* условия остановки таймера
@@ -117,7 +107,7 @@ window.addEventListener('DOMContentLoaded', function () {
       }
     };
 
-    //* навешиваем события на кнопки меню
+    //* навешиваем события меню на кнопки меню
     btnMenu.addEventListener('click', handlerMenu); //клик по кнопке .menu
     closeBtn.addEventListener('click', handlerMenu); //клик по кнопке закрыть
     menuItems.forEach((menuItem) => menuItem.addEventListener('click', handlerMenu)); //клик по ВСЕМ элементам подменю
@@ -133,21 +123,12 @@ window.addEventListener('DOMContentLoaded', function () {
     const popupClose = document.querySelector('.popup-close'); //кнопка закрытия окна
 
     const escapeHandler = (event) => {
-      //todo ОБЪЯВИМ отдельно событие закрытие окна по Escape
-      console.log('escapeHandler', event);
+      // * закрыть при нажатии Escape ОБЪЯВИМ отдельно событие закрытие окна по Escape
 
-      //? закрыть Escape
       if (event.key === 'Escape' || event.code === 'Escape') {
-        console.log('it was Escape');
         closePopupMenu();
       }
-      //? убрать действие по умолчанию у Пробела и у Ентера
-      if (event.code === 'Space') {
-        event.preventDefault();
-      }
-      if (event.key === 'Enter') {
-        event.preventDefault();
-      }
+      //? проблема с Enter и Space
     };
 
     //! закрыть popup
@@ -155,14 +136,13 @@ window.addEventListener('DOMContentLoaded', function () {
       let opacityLevel = popup.style.opacity; //1; //*НАЧАЛЬНОЕ ЗНАЧЕНИЕ ПРОЗРАЧНОСТИ при закрытии ПРОСТО УМЕНЬШАЕМ
 
       if (window.innerWidth > 768) {
-        //* Широкий экран, анимация на исчезновение включена
+        //* анимация на исчезновение на широком экране включена
         let count = 0;
         let closeInterval = setInterval(() => {
           if (opacityLevel > 0 || count > 100) {
             //* ограничиваем количество итераций
             popup.style.opacity = opacityLevel;
-            opacityLevel = parseInt((opacityLevel - 0.1) * 10) / 10; //?убираем погрешность 0.1000000000000001
-
+            opacityLevel = parseInt((opacityLevel - 0.1) * 10) / 10; //? убираем погрешность 0.1000000000000001
           } else {
             //* окно полностью скрыто
             popup.style.display = 'none';
@@ -171,28 +151,24 @@ window.addEventListener('DOMContentLoaded', function () {
           }
         }, 30);
       } else {
-        console.log('Нет анимации исчезновения');
+        // * Нет анимации исчезновения на узком экране
         popup.style.display = 'none'; //окно исчезло
         popup.style.opacity = 1.0; //вернем прозрачнось по умолчанию
       }
 
-      document.removeEventListener('keydown', escapeHandler); //todo должны убрать слушатель после закрытия окна
+      document.removeEventListener('keydown', escapeHandler); //* должны убрать слушатель после закрытия окна
     };
 
     //! показать popup
     const showPopupMenu = (event) => {
-      let time2,
-        time0 = new Date().getTime(); //todo time test
-
-      // * анимация спускаем окно сверху
       popupContent.style.top = '-382px'; //* окно полностью спрятано вверху
       popup.style.display = 'block';
       popupContent.style.display = 'block';
-      let needCssHeight = Math.ceil(window.screen.availHeight * 0.1); // нужно чтобы окно спустилось на 10% высоты браузера
+      let needCssHeight = Math.ceil(window.innerHeight * 0.1); // нужно спустить на 10% высоты браузера
       let opacityLevel = 0;
       popup.style.opacity = opacityLevel;
 
-      //! Анимация работает на ширина экране БОЛЬШЕ 768px
+      //! Анимация работает на ширине экране БОЛЬШЕ > 768px
       if (window.innerWidth > 768) {
         // * Экран широкий, анимация появления СВЕРХУ
 
@@ -201,22 +177,20 @@ window.addEventListener('DOMContentLoaded', function () {
           count++;
           //* плавно убираем непрозрачность
           popup.style.opacity = opacityLevel;
-          opacityLevel = opacityLevel < 1 ? opacityLevel + 0.03 : 1;
-          // opacityLevel = parseInt((opacityLevel - 0.1) * 10) / 10; //убираем погрешность 0.1000000000000001
+          // убираем погрешность 0.1000000000000001
+          opacityLevel = opacityLevel < 1 ? parseInt((opacityLevel + 0.03) * 100) / 100 : 1;
 
-          let popupContentTop = -382 + 9 * count; //* вычисляем сдвиг сверху, высота окна css = 382px
-          popupContent.style.top = `${popupContentTop}px`; //* окно полностью спрятано выезжает сверху
+          let popupContentTop = -382 + 9 * count; // вычисляем сдвиг сверху, высота окна css = 382px
+          popupContent.style.top = `${popupContentTop}px`; // окно полностью спрятано выезжает сверху
 
           if (popupContentTop > needCssHeight || count > 400) {
             popup.style.opacity = 1.0;
             clearInterval(showInterval);
           }
-          time2 = new Date().getTime(); //todo test
-          console.log(count, 'animation time:', time2, time2 - time0, 'opacity', popup.style.opacity); //todo test
         }, 6);
       } else {
         // * экран узкий нет анимации на появление
-        // popup.style.display = 'block';
+        popup.style.display = 'block';
         popup.style.opacity = 1.0; // окно полностью открылось
         popupContent.style.top = `${needCssHeight}px`;
       }
@@ -224,9 +198,9 @@ window.addEventListener('DOMContentLoaded', function () {
       document.addEventListener('keydown', escapeHandler); //todo добавим событие слушателя клавиатуры после popup
     };
 
+    //! вещаем основные слушатели
     //? открыть
     popupBtn.forEach((elem) => {
-      //навесить на все кнопки событие открыть popup окно
       elem.addEventListener('click', showPopupMenu);
     });
 
@@ -234,26 +208,8 @@ window.addEventListener('DOMContentLoaded', function () {
     popupClose.addEventListener('click', closePopupMenu); //навесить событие закрыть окно
     popup.addEventListener('click', closePopupMenu); // закрывать окно
 
-    //? вычисляем отступ popupContent слева
-    // popup.style.display = 'block';
-    // popupContent.style.display = 'block';
-
-    // const contentWidth = popupContent.clientWidth;
-    // const contentWidth = popupContent.offsetWidth;
-    //* const contentWidth = 310; //! подбираем СРАЗУ ВЫСТАВЛЯЕМ POPUP по Центру
-    //* const width = window.innerWidth;
-    //* const leftPercent = ((50 - 310 / width * 50));
-    //* popupContent.style.left = leftPercent + '%';
-
+    //* contentWidth = 310; //! подбираем имперически СРАЗУ ВЫСТАВЛЯЕМ POPUP по Центру
     popupContent.style.left = 50 - (310 * 50) / window.innerWidth + '%';
-
-    // const leftPercent = ((1 - contentWidth / width) * 50);
-    // const leftPercent = ((width - contentWidth) / width * 50);
-    // const leftPercent = Math.ceil((width - contentWidth) / width * 50);
-
-    // const leftPercent = ((width - contentWidth) / 2);
-    // popupContent.style.left = leftPercent + 'px';
   };
-
   togglePopUp();
 }); // * DOMContentLoaded *
