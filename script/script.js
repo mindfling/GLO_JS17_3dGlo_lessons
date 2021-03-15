@@ -4,6 +4,7 @@ window.addEventListener('DOMContentLoaded', function () {
   // ! Lesson 20
   console.log('This is 3dGLO');
 
+
   //Timer
   const countTimer = (deadline) => {
     //получаем элементы один раз
@@ -24,8 +25,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
       const seconds = Math.floor(timeRemaining % 60); // sec
       const minutes = Math.floor((timeRemaining / 60) % 60); //min
-      // let hours = Math.floor((timeRemaining / 60 / 60) % 24); //? hours свериться с ТЗ
-      const hours = Math.floor(timeRemaining / 60 / 60); // hours
+      let hours = Math.floor((timeRemaining / 60 / 60) % 24); //? hours свериться с ТЗ
+      // const hours = Math.floor(timeRemaining / 60 / 60); // hours
 
       return {timeRemaining, hours, minutes, seconds};
     };
@@ -35,7 +36,7 @@ window.addEventListener('DOMContentLoaded', function () {
       const timer = getTimeRemaining();
 
       if (timer.timeRemaining > 0) {
-        timerHours.textContent = timer.hours;
+        timerHours.textContent = addZero(timer.hours);
         timerMinuts.textContent = addZero(timer.minutes);
         timerSeconds.textContent = addZero(timer.seconds);
       } else {
@@ -51,7 +52,7 @@ window.addEventListener('DOMContentLoaded', function () {
   };
   //тест таймера на дату день программиста 256 день в году
   // countTimer('9 13 2021');
-  countTimer('3 16 2021');
+  countTimer('9 13 2021');
 
 
   //! ДЗ 20 use делигирование событий
@@ -59,8 +60,8 @@ window.addEventListener('DOMContentLoaded', function () {
   const toggleMenu = (event) => {
     const btnMenu = document.querySelector('.menu');
     const menu = document.querySelector('menu');
-    const closeBtn = document.querySelector('.close-btn');
-    const menuItems = menu.querySelectorAll('ul>li'); //коллекция всех элементов подменю
+    // const closeBtn = document.querySelector('.close-btn');
+    // const menuItems = menu.querySelectorAll('ul>li'); //коллекция всех элементов подменю
 
     //!? todo простая анимация make it by css
     const handlerMenuCSS = () => {
@@ -84,12 +85,6 @@ window.addEventListener('DOMContentLoaded', function () {
         let menuPercent = 0;
         let showInterval = setInterval(() => {
           count++;
-          //* подбираем параметры сдвига меню чисто Имперически
-          // menuPercent = 150 - (650 / (count + 110)) ** 3; //?
-          // menuPercent = 120 - (650 / (count+60) )**2; //? 
-          // menuPercent = 140 - (650 / (count+100) )**3; //? //! другой вариант быстро вперед
-          // menuPercent = -15 + 0.03 * ( (count-22) )**2;  //? //! еще вариант плавно назад и вперед
-
           menuPercent = animatePercent1(count);
           menu.style.transform = `translateX(${menuPercent}%)`;
 
@@ -139,9 +134,6 @@ window.addEventListener('DOMContentLoaded', function () {
       }
     });
 
-    // TODO заменили делигированием
-    // closeBtn.addEventListener('click', handlerMenu); //клик по кнопке закрыть
-    // menuItems.forEach((menuItem) => menuItem.addEventListener('click', handlerMenu)); //клик по ВСЕМ элементам подменю
 
     //? осталось без делегирования навешиваем КНОПКА МЕНЮ
     btnMenu.addEventListener('click', handlerMenu); //клик по кнопке .menu
@@ -292,7 +284,7 @@ window.addEventListener('DOMContentLoaded', function () {
       });
     };
     //? выставляем начальные классы у табов
-    selectTab(2);
+    selectTab(0); //! Самый первый таб это = 0
 
     //* вешаем обработчик событий
     tabHeader.addEventListener('click', (event) => {
