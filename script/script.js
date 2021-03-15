@@ -52,6 +52,8 @@ window.addEventListener('DOMContentLoaded', function () {
   //тест таймера на дату день программиста 256 день в году
   countTimer('9 13 2021');
 
+
+  //! ДЗ 20 use делигирование событий
   // Main Menu
   const toggleMenu = (event) => {
     const btnMenu = document.querySelector('.menu');
@@ -59,28 +61,40 @@ window.addEventListener('DOMContentLoaded', function () {
     const closeBtn = document.querySelector('.close-btn');
     const menuItems = menu.querySelectorAll('ul>li'); //коллекция всех элементов подменю
 
-    // todo простая анимация make it by css
-    // const handlerMenu = () => {
-    //   console.log('menu');
-    //   menu.classList.toggle('active-menu');
-    // };
+    //!? todo простая анимация make it by css
+    const handlerMenuCSS = () => {
+      console.log('menu');
+      menu.classList.toggle('active-menu');
+    };
 
-    //! плавная анимация главного меню by js
+    //!? плавная анимация главного меню by js
     const handlerMenu = (event) => {
+
+      const animatePercent1 = (count) => {
+        return -15 + 0.03 * (count - 22) ** 2; //? //! еще вариант плавно назад и вперед
+      };
+      const animatePercent2 = (count) => {
+        return 140 - (650 / (count + 100)) ** 3; //? //! другой вариант быстро вперед
+      };
+
       const showMenuAnimate = () => {
         // * анимируем меню двигаем слева translateX(%)
         let count = 0; //счетчик анимаций
         let menuPercent = 0;
         let showInterval = setInterval(() => {
           count++;
-          menuPercent = 150 - (650 / (count + 110)) ** 3; //* подбираем параметры сдвига меню чисто Имперически
+          //* подбираем параметры сдвига меню чисто Имперически
+          // menuPercent = 150 - (650 / (count + 110)) ** 3; //?
+          // menuPercent = 120 - (650 / (count+60) )**2; //? 
+          // menuPercent = 140 - (650 / (count+100) )**3; //? //! другой вариант быстро вперед
+          // menuPercent = -15 + 0.03 * ( (count-22) )**2;  //? //! еще вариант плавно назад и вперед
+
+          menuPercent = animatePercent1(count);
           menu.style.transform = `translateX(${menuPercent}%)`;
-          // menuPercent = 140 - (650 / (count+100) )**3; //? другой вариант
-          // menuPercent = 120 - (650 / (count+62) )**2; //? еще вариант
 
           if (menuPercent > 100 || count > 200) {
             //* условия остановки таймера
-            menu.style.transform = `translate(100%)`; //!
+            menu.style.transform = `translate(100%)`; //* выставляем в окончательное положение
             clearInterval(showInterval); //* закрываем таймер по условию
           }
         }, 10);
@@ -102,10 +116,36 @@ window.addEventListener('DOMContentLoaded', function () {
       }
     };
 
-    //* навешиваем события меню на кнопки меню
+
+    //! навешиваем события делигирования на МЕНЮ .menu
+    menu.addEventListener('click', (event) => {
+      const target = event.target;
+
+      if (target.matches('.close-btn')) {
+        console.log('BUTTON CLOSE');
+        //! закрыть и уехать
+        handlerMenu();
+
+      } else if (target.matches('a')) {
+        console.log('ССЛЫКИ');
+        //! просто закрыть меню
+        handlerMenu();
+
+      } else {
+        console.log('поле МЕНЮ');
+        //! ничего не делать
+        return ;
+      }
+
+    });
+
+    // TODO заменили делигированием
+    // closeBtn.addEventListener('click', handlerMenu); //клик по кнопке закрыть
+    // menuItems.forEach((menuItem) => menuItem.addEventListener('click', handlerMenu)); //клик по ВСЕМ элементам подменю
+
+    //? осталось без делегирования навешиваем КНОПКА МЕНЮ
     btnMenu.addEventListener('click', handlerMenu); //клик по кнопке .menu
-    closeBtn.addEventListener('click', handlerMenu); //клик по кнопке закрыть
-    menuItems.forEach((menuItem) => menuItem.addEventListener('click', handlerMenu)); //клик по ВСЕМ элементам подменю
+
   };
   toggleMenu();
 
@@ -206,6 +246,8 @@ window.addEventListener('DOMContentLoaded', function () {
     popupContent.style.left = 50 - (310 * 50) / window.innerWidth + '%';
   };
   togglePopUp();
+
+
 
   //! ДЗ 20 use делегирование
   //Tabs
