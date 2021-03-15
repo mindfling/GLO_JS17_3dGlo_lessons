@@ -50,7 +50,8 @@ window.addEventListener('DOMContentLoaded', function () {
     setInterval(updateClock, 1000); // * переделываем через setInterval() запускается через каждые 1000 мс
   };
   //тест таймера на дату день программиста 256 день в году
-  countTimer('9 13 2021');
+  // countTimer('9 13 2021');
+  countTimer('3 16 2021');
 
 
   //! ДЗ 20 use делигирование событий
@@ -117,26 +118,25 @@ window.addEventListener('DOMContentLoaded', function () {
     };
 
 
-    //! навешиваем события делигирования на МЕНЮ .menu
+    //! навешиваем события делегирования на МЕНЮ .menu
     menu.addEventListener('click', (event) => {
       const target = event.target;
 
       if (target.matches('.close-btn')) {
-        console.log('BUTTON CLOSE');
-        //! закрыть и уехать
+        // console.log('BUTTON CLOSE');
+        //todoo закрыть и уехать
         handlerMenu();
 
       } else if (target.matches('a')) {
-        console.log('ССЛЫКИ');
-        //! просто закрыть меню
+        // console.log('ССЛЫКИ');
+        //todoo просто закрыть меню
         handlerMenu();
 
       } else {
-        console.log('поле МЕНЮ');
-        //! ничего не делать
+        // клик по остальному меню ничего не делать
+        // console.log('поле МЕНЮ');
         return ;
       }
-
     });
 
     // TODO заменили делигированием
@@ -158,7 +158,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
     const escapeHandler = (event) => {
       // * закрыть при нажатии Escape ОБЪЯВИМ отдельно событие закрытие окна по Escape
-
       if (event.key === 'Escape' || event.code === 'Escape') {
         closePopupMenu();
       }
@@ -238,12 +237,36 @@ window.addEventListener('DOMContentLoaded', function () {
       elem.addEventListener('click', showPopupMenu);
     });
 
-    //? закрыть
-    popupClose.addEventListener('click', closePopupMenu); //навесить событие закрыть окно
-    popup.addEventListener('click', closePopupMenu); // закрывать окно
+    //? закрыть без делегирования
+    // popupClose.addEventListener('click', closePopupMenu); //навесить событие закрыть окно
+    // popup.addEventListener('click', closePopupMenu); // закрывать окно
+    
+    //! закрыть с делегированием
+    popup.addEventListener('click', (event) => {
+      const target = event.target;
+      console.log('target: ', target);
+
+      if (target === popupClose) {
+        // console.log('кнопка закрыть окно');
+        closePopupMenu(event);
+      } else if (target === popup) {
+        // console.log('область popup');
+        closePopupMenu(event);
+      } else if (target === popupContent) {
+        // ОТСТАЛЬНЫЕ ОБЛАСТИ ОКНА НЕ ЗАКРЫВАТЬ
+        // console.log('popup content');
+        return ;
+      } else {
+        // console.log('else');
+        return ;
+      }
+      return ;
+    }); // закрывать окно
+
 
     //* contentWidth = 310; //! подбираем имперически СРАЗУ ВЫСТАВЛЯЕМ POPUP по Центру
-    popupContent.style.left = 50 - (310 * 50) / window.innerWidth + '%';
+    // left = (100 - content * 100 / window) / 2
+    popupContent.style.left = 50 - 310 * 50 / window.innerWidth + '%';
   };
   togglePopUp();
 
