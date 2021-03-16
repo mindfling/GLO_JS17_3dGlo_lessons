@@ -52,6 +52,8 @@ window.addEventListener('DOMContentLoaded', function () {
   // countTimer('9 13 2021');
   countTimer('9 13 2021');
 
+
+
   //! ДЗ 20 use делигирование событий
   // Main Menu
   const toggleMenu = (event) => {
@@ -68,11 +70,15 @@ window.addEventListener('DOMContentLoaded', function () {
 
     //!? плавная анимация главного меню by js
     const handlerMenu = (event) => {
+      // варианты расчета процента сдвига анимации
+      const animatePercent = (count) => {
+        return -99 + 0.07 * (count) ** 2; //? //! еще вариант плавно назад и вперед
+      };
       const animatePercent1 = (count) => {
-        return -15 + 0.03 * (count - 22) ** 2; //? //! еще вариант плавно назад и вперед
+        return -15 + 0.03 * (count - 22) ** 2; //? // еще вариант плавно назад и вперед
       };
       const animatePercent2 = (count) => {
-        return 140 - (650 / (count + 100)) ** 3; //? //! другой вариант быстро вперед
+        return 140 - (650 / (count + 100)) ** 3; //? // другой вариант быстро вперед
       };
 
       const showMenuAnimate = () => {
@@ -81,7 +87,8 @@ window.addEventListener('DOMContentLoaded', function () {
         let menuPercent = 0;
         let showInterval = setInterval(() => {
           count++;
-          menuPercent = animatePercent1(count);
+          menuPercent = animatePercent(count);
+          // console.log(count, 'menuPercent: ', menuPercent);
           menu.style.transform = `translateX(${menuPercent}%)`;
 
           if (menuPercent > 100 || count > 200) {
@@ -89,7 +96,7 @@ window.addEventListener('DOMContentLoaded', function () {
             menu.style.transform = `translate(100%)`; //* выставляем в окончательное положение
             clearInterval(showInterval); //* закрываем таймер по условию
           }
-        }, 10);
+        }, 10); // задержка анимации 10 мс
       };
 
       //? проверяем состояние меню handlerMenu основная логика
@@ -113,11 +120,11 @@ window.addEventListener('DOMContentLoaded', function () {
       const target = event.target;
 
       if (target.matches('.close-btn')) {
-        // console.log('BUTTON CLOSE');
+        // клик по кнопке BUTTON CLOSE
         //todoo закрыть и уехать
         handlerMenu();
       } else if (target.matches('a')) {
-        // console.log('ССЛЫКИ');
+        // клик по ссылке
         //todoo просто закрыть меню
         handlerMenu();
       } else {
@@ -222,7 +229,6 @@ window.addEventListener('DOMContentLoaded', function () {
     //? закрыть с делегированием
     popup.addEventListener('click', (event) => {
       const target = event.target;
-      console.log('target: ', target);
 
       if (target === popupClose) {
         // кнопка закрыть окно
@@ -274,13 +280,10 @@ window.addEventListener('DOMContentLoaded', function () {
     //* вешаем обработчик событий
     tabHeader.addEventListener('click', (event) => {
       let target = event.target.closest('.service-header-tab');
-      console.log(target);
-
       // пробегаем по всем табам
       tab.forEach((item, i) => {
         //находим там совпадающий с кликнутым используем его номер
         if (item === target) {
-          console.log('this tab is', i);
           //устанавливаем видимым только этот таб
           selectTab(i);
         }
@@ -293,23 +296,22 @@ window.addEventListener('DOMContentLoaded', function () {
 
   //! ДЗ 21 точечки
   //! dots
-    const addSliderDots = () => {
-      const portfolioDotsParent = document.querySelector('.portfolio-dots');
-      const slide = document.querySelectorAll('.portfolio-item');
+  const addSliderDots = () => {
+    const portfolioDotsParent = document.querySelector('.portfolio-dots');
+    const slide = document.querySelectorAll('.portfolio-item');
 
-      slide.forEach((item, index) => {
-        const li = document.createElement('li');
-        li.classList.add('dot');
-        if (index === 0) {
-          li.classList.add('dot-active');
-        }
-        portfolioDotsParent.append(li);
-      });
-
-      // let portfolioDot = portfolioDotsParent.querySelectorAll('.dot');
-      // portfolioDot[0].classList.add('dot-active');
-    };
-    addSliderDots();
+    slide.forEach((item, index) => {
+      const li = document.createElement('li');
+      li.classList.add('dot');
+      if (index === 0) {
+        li.classList.add('dot-active'); //* активный 1й dot
+      }
+      portfolioDotsParent.append(li);
+    });
+    // let portfolioDot = portfolioDotsParent.querySelectorAll('.dot');
+    // portfolioDot[0].classList.add('dot-active');
+  };
+  addSliderDots();
 
   //! Слайдер с точечками
   //! ДЗ 21
@@ -318,8 +320,8 @@ window.addEventListener('DOMContentLoaded', function () {
       dot = document.querySelectorAll('.dot'),
       slider = document.querySelector('.portfolio-content');
 
-    let currentSlide = 0,
-      interval;
+    let currentSlide = 0;
+    let interval;
 
     // скрывает текущий слайд
     const prevSlide = (elem, index, strClass) => {
@@ -330,8 +332,9 @@ window.addEventListener('DOMContentLoaded', function () {
       elem[index].classList.add(strClass); // меняем слайды через css
     };
 
-    //! основная функция смены слайдов
+    //! основная функция смены слайдов autoPlay
     const autoPlaySlide = () => {
+
       prevSlide(slide, currentSlide, 'portfolio-item-active');
       prevSlide(dot, currentSlide, 'dot-active');
       currentSlide++;
@@ -341,7 +344,8 @@ window.addEventListener('DOMContentLoaded', function () {
       nextSlide(slide, currentSlide, 'portfolio-item-active');
       nextSlide(dot, currentSlide, 'dot-active');
     };
-    // старт слайдов с задержкой time
+
+    // старт слайдов autoPlay с задержкой time
     const startSlide = (time = 3000) => {
       interval = setInterval(autoPlaySlide, time);
     };
@@ -350,18 +354,18 @@ window.addEventListener('DOMContentLoaded', function () {
       clearInterval(interval);
     };
 
-    //! делегируем
+    //! делегируем autoPlay по клику
     slider.addEventListener('click', (event) => {
       event.preventDefault();
       const target = event.target;
       if (!target.matches('.portfolio-btn, .dot')) {
-        //* отбрасываем все остальное кроме точек и кнопок
+        //* отбрасываем все остальные клики кроме как по точкам и кнопкам
         return;
       }
 
       prevSlide(slide, currentSlide, 'portfolio-item-active');
       prevSlide(dot, currentSlide, 'dot-active');
-
+      //! обрабатываем клик по элементам управления
       if (target.matches('#arrow-right')) {
         currentSlide++;
       } else if (target.matches('#arrow-left')) {
@@ -373,32 +377,29 @@ window.addEventListener('DOMContentLoaded', function () {
           }
         });
       }
-
       if (currentSlide >= slide.length) {
         currentSlide = 0;
       }
       if (currentSlide < 0) {
         currentSlide = slide.length - 1;
       }
-
       nextSlide(slide, currentSlide, 'portfolio-item-active');
       nextSlide(dot, currentSlide, 'dot-active');
     });
 
     slider.addEventListener('mouseover', (event) => { //? not mouseenter
-      //? not mouseenter
       if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
         stopSlide();
       }
     });
 
     slider.addEventListener('mouseout', (event) => { //! not mouseleave
-      //? not mouseleave
       if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
-        startSlide();
+        startSlide(2000);
       }
     });
-    startSlide();
+
+    startSlide(2000);
   };
   slider();
 
