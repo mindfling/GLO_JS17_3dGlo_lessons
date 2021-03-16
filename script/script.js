@@ -1,13 +1,11 @@
 // запуск после загрузки страници тоже что и defer
 window.addEventListener('DOMContentLoaded', function () {
   'use strict';
-  // ! Lesson 20
+  //! Lesson 21
   console.log('This is 3dGLO');
-
 
   //Timer
   const countTimer = (deadline) => {
-    //получаем элементы один раз
     const timerHours = document.querySelector('#timer-hours');
     const timerMinuts = document.querySelector('#timer-minutes');
     const timerSeconds = document.querySelector('#timer-seconds');
@@ -25,8 +23,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
       const seconds = Math.floor(timeRemaining % 60); // sec
       const minutes = Math.floor((timeRemaining / 60) % 60); //min
-      let hours = Math.floor((timeRemaining / 60 / 60) % 24); //? hours свериться с ТЗ
-      // const hours = Math.floor(timeRemaining / 60 / 60); // hours
+      const hours = Math.floor(timeRemaining / 60 / 60); // hours
+      // let hours = Math.floor((timeRemaining / 60 / 60) % 24); //? hours свериться с ТЗ
 
       return {timeRemaining, hours, minutes, seconds};
     };
@@ -54,7 +52,6 @@ window.addEventListener('DOMContentLoaded', function () {
   // countTimer('9 13 2021');
   countTimer('9 13 2021');
 
-
   //! ДЗ 20 use делигирование событий
   // Main Menu
   const toggleMenu = (event) => {
@@ -71,7 +68,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
     //!? плавная анимация главного меню by js
     const handlerMenu = (event) => {
-
       const animatePercent1 = (count) => {
         return -15 + 0.03 * (count - 22) ** 2; //? //! еще вариант плавно назад и вперед
       };
@@ -112,8 +108,7 @@ window.addEventListener('DOMContentLoaded', function () {
       }
     };
 
-
-    //! навешиваем события делегирования на МЕНЮ .menu
+    //* навешиваем события делегирования на МЕНЮ .menu
     menu.addEventListener('click', (event) => {
       const target = event.target;
 
@@ -121,23 +116,18 @@ window.addEventListener('DOMContentLoaded', function () {
         // console.log('BUTTON CLOSE');
         //todoo закрыть и уехать
         handlerMenu();
-
       } else if (target.matches('a')) {
         // console.log('ССЛЫКИ');
         //todoo просто закрыть меню
         handlerMenu();
-
       } else {
         // клик по остальному меню ничего не делать
-        // console.log('поле МЕНЮ');
-        return ;
+        return;
       }
     });
 
-
     //? осталось без делегирования навешиваем КНОПКА МЕНЮ
     btnMenu.addEventListener('click', handlerMenu); //клик по кнопке .menu
-
   };
   toggleMenu();
 
@@ -223,48 +213,41 @@ window.addEventListener('DOMContentLoaded', function () {
       document.addEventListener('keydown', escapeHandler); //todo добавим событие слушателя клавиатуры после popup
     };
 
-    //! вещаем основные слушатели
-    //? открыть
+    
+    //? открыть //! вещаем основные слушатели
     popupBtn.forEach((elem) => {
       elem.addEventListener('click', showPopupMenu);
     });
 
-    //? закрыть без делегирования
-    // popupClose.addEventListener('click', closePopupMenu); //навесить событие закрыть окно
-    // popup.addEventListener('click', closePopupMenu); // закрывать окно
-    
-    //! закрыть с делегированием
+    //? закрыть с делегированием
     popup.addEventListener('click', (event) => {
       const target = event.target;
       console.log('target: ', target);
 
       if (target === popupClose) {
-        // console.log('кнопка закрыть окно');
+        // кнопка закрыть окно
         closePopupMenu(event);
       } else if (target === popup) {
-        // console.log('область popup');
+        // область popup закрыть окно
         closePopupMenu(event);
       } else if (target === popupContent) {
-        // ОТСТАЛЬНЫЕ ОБЛАСТИ ОКНА НЕ ЗАКРЫВАТЬ
-        // console.log('popup content');
-        return ;
+        // остальные области окна контента
+        return;
       } else {
-        // console.log('else');
-        return ;
+        // ОТСТАЛЬНЫЕ ОБЛАСТИ ОКНА НЕ ЗАКРЫВАТЬ 
+        return;
       }
-      return ;
+      return;
     }); // закрывать окно
 
 
     //* contentWidth = 310; //! подбираем имперически СРАЗУ ВЫСТАВЛЯЕМ POPUP по Центру
     // left = (100 - content * 100 / window) / 2
-    popupContent.style.left = 50 - 310 * 50 / window.innerWidth + '%';
+    popupContent.style.left = 50 - (310 * 50) / window.innerWidth + '%';
   };
   togglePopUp();
 
 
-
-  //! ДЗ 20 use делегирование
   //Tabs
   const tabs = () => {
     const tabHeader = document.querySelector('.service-header');
@@ -272,7 +255,8 @@ window.addEventListener('DOMContentLoaded', function () {
     const tabContent = document.querySelectorAll('.service-tab');
 
     //! функция выставляет видимым заданый таб
-    const selectTab = (select) => {   // * toggle tab content
+    const selectTab = (select) => {
+      // * toggle tab content
       tab.forEach((item, i) => {
         if (i === select) {
           item.classList.add('active');
@@ -283,6 +267,7 @@ window.addEventListener('DOMContentLoaded', function () {
         }
       });
     };
+
     //? выставляем начальные классы у табов
     selectTab(0); //! Самый первый таб это = 0
 
@@ -302,8 +287,103 @@ window.addEventListener('DOMContentLoaded', function () {
       });
     });
   };
+
   tabs();
 
 
 
+  //! Слайдер с точечками
+  //! ДЗ 21
+  const slider = () => {
+    const slide = document.querySelectorAll('.portfolio-item'),
+      dot = document.querySelectorAll('.dot'),
+      slider = document.querySelector('.portfolio-content');
+
+    let currentSlide = 0,
+      interval;
+
+    // скрывает текущий слайд
+    const prevSlide = (elem, index, strClass) => {
+      elem[index].classList.remove(strClass); // меняем слайды через css
+    };
+    // показывает следующий слайд
+    const nextSlide = (elem, index, strClass) => {
+      elem[index].classList.add(strClass); // меняем слайды через css
+    };
+
+    //! основная функция смены слайдов
+    const autoPlaySlide = () => {
+      prevSlide(slide, currentSlide, 'portfolio-item-active');
+      prevSlide(dot, currentSlide, 'dot-active');
+      currentSlide++;
+      if (currentSlide >= slide.length) {
+        currentSlide = 0;
+      }
+      nextSlide(slide, currentSlide, 'portfolio-item-active');
+      nextSlide(dot, currentSlide, 'dot-active');
+    };
+    // старт слайдов с задержкой time
+    const startSlide = (time = 3000) => {
+      interval = setInterval(autoPlaySlide, time);
+    };
+    // остановить слайды (например при наведении на точки)
+    const stopSlide = () => {
+      clearInterval(interval);
+    };
+
+    //! делегируем
+    slider.addEventListener('click', (event) => {
+      event.preventDefault();
+      const target = event.target;
+      if (!target.matches('.portfolio-btn, .dot')) {
+        //* отбрасываем все остальное кроме точек и кнопок
+        return;
+      }
+
+      prevSlide(slide, currentSlide, 'portfolio-item-active');
+      prevSlide(dot, currentSlide, 'dot-active');
+
+      if (target.matches('#arrow-right')) {
+        currentSlide++;
+      } else if (target.matches('#arrow-left')) {
+        currentSlide--;
+      } else if (target.matches('.dot')) {
+        dot.forEach((elem, index) => {
+          if (elem === target) {
+            currentSlide = index;
+          }
+        });
+      }
+
+      if (currentSlide >= slide.length) {
+        currentSlide = 0;
+      }
+      if (currentSlide < 0) {
+        currentSlide = slide.length - 1;
+      }
+
+      nextSlide(slide, currentSlide, 'portfolio-item-active');
+      nextSlide(dot, currentSlide, 'dot-active');
+    });
+
+    slider.addEventListener('mouseover', (event) => { //? not mouseenter
+      //? not mouseenter
+      if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
+        stopSlide();
+      }
+    });
+
+    slider.addEventListener('mouseout', (event) => { //! not mouseleave
+      //? not mouseleave
+      if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
+        startSlide();
+      }
+    });
+    startSlide();
+  };
+  slider();
+
+
 }); // * DOMContentLoaded *
+
+
