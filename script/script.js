@@ -293,30 +293,23 @@ window.addEventListener('DOMContentLoaded', function () {
 
   //! ДЗ 21 точечки
   //! dots
-    const addDots = () => {
+    const addSliderDots = () => {
       const portfolioDotsParent = document.querySelector('.portfolio-dots');
       const slide = document.querySelectorAll('.portfolio-item');
 
-      slide.forEach((item) => {
+      slide.forEach((item, index) => {
         const li = document.createElement('li');
-        li.classList.add('li');
-        
+        li.classList.add('dot');
+        if (index === 0) {
+          li.classList.add('dot-active');
+        }
         portfolioDotsParent.append(li);
       });
-
-
-      for (let i = 0; i < slide.length+10; i++) {
-        const li = document.createElement('li');
-        console.log('li: ', li);
-        li.classList.add('dot');
-        portfolioDotsParent.append(li);
-      }
 
       // let portfolioDot = portfolioDotsParent.querySelectorAll('.dot');
       // portfolioDot[0].classList.add('dot-active');
     };
-
-    addDots();
+    addSliderDots();
 
   //! Слайдер с точечками
   //! ДЗ 21
