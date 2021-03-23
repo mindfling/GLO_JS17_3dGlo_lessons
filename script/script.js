@@ -1,7 +1,7 @@
 // запуск после загрузки страници тоже что и defer
 window.addEventListener('DOMContentLoaded', function () {
   'use strict';
-  //! Lesson 21
+  //! Lesson 23
   console.log('This is 3dGLO');
 
   //Timer
@@ -10,10 +10,8 @@ window.addEventListener('DOMContentLoaded', function () {
     const timerMinuts = document.querySelector('#timer-minutes');
     const timerSeconds = document.querySelector('#timer-seconds');
 
-    //добавляет ноль к коротким числам
-    const addZero = (numb) => {
-      return numb >= 0 && numb < 10 ? '0' + numb : numb;
-    };
+    //функция добавляет ноль к коротким числам
+    const addZero = numb => numb >= 0 && numb < 10 ? '0' + numb : numb;
 
     // сюда всё что вычисляется по времени
     const getTimeRemaining = () => {
@@ -54,7 +52,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 
-  //! ДЗ 20 use делигирование событий
   // Main Menu
   const toggleMenu = (event) => {
     const btnMenu = document.querySelector('.menu');
@@ -294,8 +291,7 @@ window.addEventListener('DOMContentLoaded', function () {
   tabs();
 
 
-  //! ДЗ 21 точечки
-  //! dots
+  //функция генерирует точки dots на слайде
   const addSliderDots = () => {
     const portfolioDotsParent = document.querySelector('.portfolio-dots');
     const slide = document.querySelectorAll('.portfolio-item');
@@ -313,8 +309,7 @@ window.addEventListener('DOMContentLoaded', function () {
   };
   addSliderDots();
 
-  //! Слайдер с точечками
-  //! ДЗ 21
+  // Слайдер с точечками
   const slider = () => {
     const slide = document.querySelectorAll('.portfolio-item'),
       dot = document.querySelectorAll('.dot'),
@@ -393,7 +388,7 @@ window.addEventListener('DOMContentLoaded', function () {
       }
     });
 
-    slider.addEventListener('mouseout', (event) => { //! not mouseleave
+    slider.addEventListener('mouseout', (event) => { //? not mouseleave
       if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
         startSlide(2000);
       }
@@ -402,6 +397,35 @@ window.addEventListener('DOMContentLoaded', function () {
     startSlide(2000);
   };
   slider();
+
+
+  // ! ДЗ 23 наша КОММАНДА .command
+  const ourCommand = () => {
+
+    const command = document.querySelector('.command');
+    
+    const commandPhotos = command.querySelectorAll('.command__photo');
+    commandPhotos.forEach( photo => {
+      console.log(photo.src);
+      console.log(photo.dataset.img);
+  
+      photo.src = photo.dataset.img;
+    });
+    
+      // command.addEventListener('click', (event) => {
+      //   const target = event.target;
+      //   console.log('target: ', target);
+    
+      //   if (target === commandPhoto) {
+          
+      //   }
+    
+      // });
+
+    return ;
+  };
+  ourCommand();
+
 
 
 }); // * DOMContentLoaded *
