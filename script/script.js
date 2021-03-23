@@ -403,24 +403,42 @@ window.addEventListener('DOMContentLoaded', function () {
   const ourCommand = () => {
 
     const command = document.querySelector('.command');
-    
     const commandPhotos = command.querySelectorAll('.command__photo');
+    let src;
+
     commandPhotos.forEach( photo => {
-      console.log(photo.src);
-      console.log(photo.dataset.img);
-  
-      photo.src = photo.dataset.img;
-    });
+
+      photo.addEventListener('mouseenter', (event) => {
+        console.log('src 1: ', src);
+        src = photo.src;
+        
+        console.log(photo.src);
+        console.log(photo.dataset.img);
+        
+        photo.src = photo.dataset.img;
+        console.log('src 2: ', src);
+      });
+
+      photo.addEventListener('mouseleave', (event) => {
+
+        console.log(src);
+
+        if (src) {
+          photo.src = src;
+        };
+      });
+
+    }); //forEach
     
-      // command.addEventListener('click', (event) => {
-      //   const target = event.target;
-      //   console.log('target: ', target);
+      command.addEventListener('click', (event) => {
+        const target = event.target;
+        console.log('target: ', target);
     
-      //   if (target === commandPhoto) {
-          
-      //   }
+        if (target.matches('.command__photo')) {
+            console.log(target.dataset.img);
+        }
     
-      // });
+      });
 
     return ;
   };
