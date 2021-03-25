@@ -257,7 +257,7 @@ window.addEventListener('DOMContentLoaded', function () {
     const tab = tabHeader.querySelectorAll('.service-header-tab');
     const tabContent = document.querySelectorAll('.service-tab');
 
-    //! функция выставляет видимым заданый таб
+    // * функция выставляет видимым заданый таб
     const selectTab = (select) => {
       // * toggle tab content
       tab.forEach((item, i) => {
@@ -272,7 +272,7 @@ window.addEventListener('DOMContentLoaded', function () {
     };
 
     //? выставляем начальные классы у табов
-    selectTab(0); //! Самый первый таб это = 0
+    selectTab(0); //  Самый первый таб это = 0
 
     //* вешаем обработчик событий
     tabHeader.addEventListener('click', (event) => {
@@ -287,7 +287,6 @@ window.addEventListener('DOMContentLoaded', function () {
       });
     });
   };
-
   tabs();
 
 
@@ -404,47 +403,37 @@ window.addEventListener('DOMContentLoaded', function () {
 
     const command = document.querySelector('.command');
     const commandPhotos = command.querySelectorAll('.command__photo');
-    let src;
-
+    // let src; // запомним начальный адрес картинки
+    
     commandPhotos.forEach( photo => {
+      let src; // запомним начальный адрес картинки // ! В ЗАМЫКАНИИ
 
       photo.addEventListener('mouseenter', (event) => {
-        console.log('src 1: ', src);
-        src = photo.src;
-        
-        console.log(photo.src);
-        console.log(photo.dataset.img);
-        
-        photo.src = photo.dataset.img;
-        console.log('src 2: ', src);
+        const target = event.target;
+        if (target.matches('.command__photo')) { //? если совпал адресс фото
+          src = photo.src;
+          photo.src = photo.dataset.img; //! меняем адрес фото при наведении
+        }
       });
 
       photo.addEventListener('mouseleave', (event) => {
-
-        console.log(src);
-
-        if (src) {
-          photo.src = src;
-        };
-      });
-
-    }); //forEach
-    
-      command.addEventListener('click', (event) => {
         const target = event.target;
-        console.log('target: ', target);
-    
-        if (target.matches('.command__photo')) {
-            console.log(target.dataset.img);
+        if (target.matches('.command__photo')) { //? если совпал адресс фото
+          if (src) {
+            photo.src = src; //! возвращаем назад фоту
+          };
         }
-    
       });
+    }); //forEach
+
 
     return ;
   };
   ourCommand();
 
 
+  // ! ДЗ 23 Валидация форм 
+  
 
 }); // * DOMContentLoaded *
 
