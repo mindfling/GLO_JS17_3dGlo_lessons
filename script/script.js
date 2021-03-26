@@ -61,7 +61,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
     //!? todo простая анимация make it by css
     const handlerMenuCSS = () => {
-      console.log('menu');
+      // console.log('menu');
       menu.classList.toggle('active-menu');
     };
 
@@ -85,7 +85,6 @@ window.addEventListener('DOMContentLoaded', function () {
         let showInterval = setInterval(() => {
           count++;
           menuPercent = animatePercent(count);
-          // console.log(count, 'menuPercent: ', menuPercent);
           menu.style.transform = `translateX(${menuPercent}%)`;
 
           if (menuPercent > 100 || count > 200) {
@@ -399,6 +398,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
   // ! ДЗ 23 наша КОММАНДА .command
+  // 1) В нашем проекте есть Блок с картинками Наша Команда
   const ourCommand = () => {
 
     const command = document.querySelector('.command');
@@ -426,8 +426,6 @@ window.addEventListener('DOMContentLoaded', function () {
       });
     }); //forEach
 
-
-    return ;
   };
   ourCommand();
 
@@ -435,42 +433,55 @@ window.addEventListener('DOMContentLoaded', function () {
   // ! ДЗ 23 Валидация форм 
   const inputValidation = () => {
 
+
+    const calcItems = document.querySelectorAll('.calc-item');
     const inputFields = document.querySelectorAll('input');
 
-    inputFields.forEach(item => {
+    // * форма калькулятора Рассчитать стоимость
+    calcItems.forEach( item => {
+      // 2)  В калькуляторе разрешить ввод только цифр:
+      if (!item.classList.contains('calc-type')) {
+        
+        item.addEventListener('input', event => {
+          let target = event.target;
+          event.target.value = target.value.replace(/[^\d]/g, '');
+        });
+      }
+    
+    });
+    
 
-      item.addEventListener('input', (event) => {
+
+    // * поля ввода в Формах #form1header #form2footer #form3.modal
+    inputFields.forEach(elem => {
+
+      elem.addEventListener('input', (event) => {
         const target = event.target;
-        let value = target.value;
+        // ? let value = target.value;
 
-        if (item.type === 'text') {
-          console.warn('text', target.value);
-          // запрещаем ввод других символов кроме кириллицы в текстовое поле
+        if (elem.name === 'user_name' || elem.name === 'user_message') {
+          // 3) В полях ввода "Ваше имя" и "Ваше сообщение" разрешить только ввод кириллицы в любом регистре, дефиса и пробела.
+          // запрещаем ввод других символов кроме кириллицы  а-я ёЁ А-Я ' '  '-'
           target.value = target.value.replace(/[^а-яё\s\-]/ig, '');
           
-        } else if (item.type === 'email') {
-          console.log('email', 'value', target.value);
-          target.value = target.value.replace(/[^a-zA-Z@\-\_\.\!\~\*\']/ig, '');
+        } else if (elem.name === 'user_email') {
           // 4) В поле "email"
           // разрешить только ввод латиницы в любом регистре и спецсимволы
           // Собака @  Дефис - Подчеркивание _ Точка. 
           // Восклицательный знак! Тильда~ Звездочка * 
           // Одинарная кавычка '
-          // target.value = target.value.replace(/[^a-z]/ig, '');
+          target.value = target.value.replace(/[^a-zA-Z@\-\_\.\!\~\*\']/ig, '');
           
-        } else if (item.type === 'tel') {
-          console.warn('tel');
+        } else if (elem.name === 'user_phone') {
           // 5) В поле "Номер телефона" разрешить только ввод цифр,  ( ) - круглых скобок и дефис
           target.value = target.value.replace(/[^\d\(\)\-]/ig, '');
-          
         }
       });
     });
 
-    return;
+    //todo blur
   };
   inputValidation();
-
 
 
 
