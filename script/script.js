@@ -433,7 +433,48 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
   // ! ДЗ 23 Валидация форм 
-  
+  const inputValidation = () => {
+
+    const inputFields = document.querySelectorAll('input');
+
+    inputFields.forEach(item => {
+
+      item.addEventListener('input', (event) => {
+        const target = event.target;
+        let value = target.value;
+
+        if (item.type === 'text') {
+          console.warn('text', target.value);
+          // запрещаем ввод других символов кроме кириллицы в текстовое поле
+          target.value = target.value.replace(/[^а-яё\s\-]/ig, '');
+          
+        } else if (item.type === 'email') {
+          console.log('email', 'value', target.value);
+          target.value = target.value.replace(/[^a-zA-Z@\-\_\.\!\~\*\']/ig, '');
+          // 4) В поле "email"
+          // разрешить только ввод латиницы в любом регистре и спецсимволы
+          // Собака @  Дефис - Подчеркивание _ Точка. 
+          // Восклицательный знак! Тильда~ Звездочка * 
+          // Одинарная кавычка '
+          // target.value = target.value.replace(/[^a-z]/ig, '');
+          
+        } else if (item.type === 'tel') {
+          console.warn('tel');
+          // 5) В поле "Номер телефона" разрешить только ввод цифр,  ( ) - круглых скобок и дефис
+          target.value = target.value.replace(/[^\d\(\)\-]/ig, '');
+          
+        }
+      });
+    });
+
+    return;
+  };
+  inputValidation();
+
+
+
+
+
 
 }); // * DOMContentLoaded *
 
