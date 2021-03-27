@@ -458,6 +458,7 @@ window.addEventListener('DOMContentLoaded', function () {
       console.log('elem: ', elem);
 
         //todo blur
+
         // 6) При потере фокуса(событие blur) реализовать проверку на корректность введённого значения в полях ввода 
         // и замена его на корректное при необходимости по правилам:
 
@@ -465,19 +466,23 @@ window.addEventListener('DOMContentLoaded', function () {
         // Несколько идущих подряд пробелов или дефисов должны заменяться на один //* [x]
         // Пробелы и дефисы в начале и конце значения должны удаляться //* [ ]
         // Для поля "Ваше имя" Первая буква каждого слова должна приводиться к верхнему регистру, а все остальные — к нижнему
-        if (elem.name === 'user_name' || elem.name === 'user_message') {
+        if (elem.name === 'user_message') {
           // удалить "      " на " "  "------" на "-"
           // let str = value.match(/\-+/g);
           //?                     (^[\s\-]+)   (?<=\s)\s+   (?<=\-)\-+  ([\s\-]+$)           
           value = value.replace(/((^[\s\-]+))|((?<=\s)\s+)|((?<=\-)\-+)|([\s\-]+$)/g, '');
-          // value = value.replace(/\-+/g, '-');
-          // value = value.replace(/\s+/g, ' ');
           //?
-          // console.log('str: ', str);
-          // str = value.match(/\s+/g);
-          // console.log('str: ', str);
           elem.value = value;
           
+        } else if (elem.name === 'user_name') {
+
+          let words = value.match(/[а-я]+/ig);
+          words = words.map(item => (item.substring(0, 1).toUpperCase() + item.substring(1).toLowerCase()) );
+          value = words.join(' ');
+          // value = value.toString().substring(0,1).toUpperCase() + value.toString().substring(1).toLowerCase();
+
+
+          elem.value = value;
           
         } else if (elem.name === 'user_email') {
           // удалить @@@@@ 
@@ -488,9 +493,6 @@ window.addEventListener('DOMContentLoaded', function () {
           
         } else if (elem.name === 'user_phone') {
           // ? удалить ----   ((((   )))) заменить на один
-          // value = value.replace(/\-+/g, '-');
-          // value = value.replace(/\(+/g, '(');
-          // value = value.replace(/\)+/g, ')');
 
           // ? или просто удалить лишние
           //?                     (?<=\()\(       (?<=\))\)       (?<=\-)\-         
@@ -503,7 +505,6 @@ window.addEventListener('DOMContentLoaded', function () {
         } else {
           console.log('other input');
         }
-      return elem;
     };
 
 
@@ -512,7 +513,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
       elem.addEventListener('input', (event) => {
         const target = event.target;
-        // ? let value = target.value;
+        let value = target.value;
 
         if (elem.name === 'user_name' || elem.name === 'user_message') {
           // 3) В полях ввода "Ваше имя" и "Ваше сообщение" разрешить только ввод кириллицы в любом регистре, дефиса и пробела.
@@ -526,18 +527,27 @@ window.addEventListener('DOMContentLoaded', function () {
           // Восклицательный знак! Тильда~ Звездочка * 
           // Одинарная кавычка '
           // ? target.value = target.value.replace(/[^a-zA-Z@\-\_\.\!\~\*\']/ig, '');
-          // ? <                                                           (?<=@.*)@+            
-          target.value = target.value.replace(/([^a-zA-Z@\-\_\.\!\~\*\'])|((?<=@.*)@+)/ig, '');
+
+          // ? <                                        (?<=^)@+   (?<=@.*)@+            
+          const regexpEmail = /([^a-z@\_\-\.\!\~\*\'])|((?<=^)@+)|((?<=@.*)@+)/ig;
+          target.value = value.replace(regexpEmail, '');
+
+          // target.value = value.replace(/([^a-zA-Z@\-\_\.\!\~\*\'])|((?<=@.*)@+)/ig, '');
           
         } else if (elem.name === 'user_phone') {
           // 5) В поле "Номер телефона" разрешить только ввод цифр,  ( ) - круглых скобок и дефис
           // target.value = target.value.replace(/([^\d\(\)\-\+])/ig, '');
-          // ?                                                  (?<!^)\++   (?<=[\+\-])\-+   (?<=\)[\d\-\)\(]*)\)+   (?<=\([\d\-\)\(]*)\(+   (?<=\-)\-+      
-          target.value = target.value.replace(/([^\d\(\)\-\+])|((?<!^)\++)|((?<=[\+\-])\-+)|((?<=\)[\d\-\)\(]*)\)+)|((?<=\([\d\-\)\(]*)\(+)|((?<=\-)\-+)/ig, '');
+
+          // ?                                     ((?<=.{35,}).)  (?<!^)\++  ((?<=^)\-)  (?<=[\+\-])\-+   (?<=\([\d\-\)\(]*)\(+  ((?<=\()\)+)  (?<=\)[\d\-\)\(]*)\)+   (?<=\-)\-+      
+          const regexpTelNumber = /([^\d\(\)\-\+])|((?<=.{35,}).)|((?<!^)\++)|((?<=^)\-)|((?<=[\+\-])\-+)|((?<=\([\d\-\)\(]*)\(+)|((?<=\()\)+)|((?<=\)[\d\-\)\(]*)\)+)|((?<=\-)\-+)/ig;
+          target.value = value.replace(regexpTelNumber, '');
+
+          // ? target.value = target.value.replace(/([^\d\(\)\-\+])|((?<!^)\++)|((?<=[\+\-])\-+)|((?<=\)[\d\-\)\(]*)\)+)|((?<=\([\d\-\)\(]*)\(+)|((?<=\-)\-+)/ig, '');
         }
       }); // ? forEach input Listener
 
 
+      // * событие потеря фокуса
       elem.addEventListener('blur', (event) => {
         const target = event.target;
 
