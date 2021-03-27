@@ -451,6 +451,61 @@ window.addEventListener('DOMContentLoaded', function () {
     });
     
 
+    const validateElemOnBlur = (elem) => {
+
+      let value = elem.value;
+      console.log('value: ', value);
+      console.log('elem: ', elem);
+
+        //todo blur
+        // 6) При потере фокуса(событие blur) реализовать проверку на корректность введённого значения в полях ввода 
+        // и замена его на корректное при необходимости по правилам:
+
+        // Должны удаляться все символы, кроме допустимых
+        // Несколько идущих подряд пробелов или дефисов должны заменяться на один //* [x]
+        // Пробелы и дефисы в начале и конце значения должны удаляться //* [ ]
+        // Для поля "Ваше имя" Первая буква каждого слова должна приводиться к верхнему регистру, а все остальные — к нижнему
+        if (elem.name === 'user_name' || elem.name === 'user_message') {
+          // удалить "      " на " "  "------" на "-"
+          // let str = value.match(/\-+/g);
+          //?                     (^[\s\-]+)   (?<=\s)\s+   (?<=\-)\-+  ([\s\-]+$)           
+          value = value.replace(/((^[\s\-]+))|((?<=\s)\s+)|((?<=\-)\-+)|([\s\-]+$)/g, '');
+          // value = value.replace(/\-+/g, '-');
+          // value = value.replace(/\s+/g, ' ');
+          //?
+          // console.log('str: ', str);
+          // str = value.match(/\s+/g);
+          // console.log('str: ', str);
+          elem.value = value;
+          
+          
+        } else if (elem.name === 'user_email') {
+          // удалить @@@@@ 
+          value = value.replace(/(?<=@)@+/g, '');
+          
+          
+          elem.value = value;
+          
+        } else if (elem.name === 'user_phone') {
+          // ? удалить ----   ((((   )))) заменить на один
+          // value = value.replace(/\-+/g, '-');
+          // value = value.replace(/\(+/g, '(');
+          // value = value.replace(/\)+/g, ')');
+
+          // ? или просто удалить лишние
+          //?                     (?<=\()\(       (?<=\))\)       (?<=\-)\-         
+          value = value.replace(/((?<=\()\({1,})|((?<=\))\){1,})|((?<=\-)\-{1,})|((?<=\+)\+{1,})/g, '');
+          //? + плюсик в номере телефона
+          // value = value.replace(/(^(?<=0)0+)|([\-\+]+)/g, '');
+          // value = value.replace(/^[+]+/g, '+');
+          elem.value = value;
+
+        } else {
+          console.log('other input');
+        }
+      return elem;
+    };
+
 
     // * поля ввода в Формах #form1header #form2footer #form3.modal
     inputFields.forEach(elem => {
@@ -470,16 +525,30 @@ window.addEventListener('DOMContentLoaded', function () {
           // Собака @  Дефис - Подчеркивание _ Точка. 
           // Восклицательный знак! Тильда~ Звездочка * 
           // Одинарная кавычка '
-          target.value = target.value.replace(/[^a-zA-Z@\-\_\.\!\~\*\']/ig, '');
+          // ? target.value = target.value.replace(/[^a-zA-Z@\-\_\.\!\~\*\']/ig, '');
+          // ? <                                                           (?<=@.*)@+            
+          target.value = target.value.replace(/([^a-zA-Z@\-\_\.\!\~\*\'])|((?<=@.*)@+)/ig, '');
           
         } else if (elem.name === 'user_phone') {
           // 5) В поле "Номер телефона" разрешить только ввод цифр,  ( ) - круглых скобок и дефис
-          target.value = target.value.replace(/[^\d\(\)\-]/ig, '');
+          // target.value = target.value.replace(/([^\d\(\)\-\+])/ig, '');
+          // ?                                                  (?<!^)\++   (?<=[\+\-])\-+   (?<=\)[\d\-\)\(]*)\)+   (?<=\([\d\-\)\(]*)\(+   (?<=\-)\-+      
+          target.value = target.value.replace(/([^\d\(\)\-\+])|((?<!^)\++)|((?<=[\+\-])\-+)|((?<=\)[\d\-\)\(]*)\)+)|((?<=\([\d\-\)\(]*)\(+)|((?<=\-)\-+)/ig, '');
         }
-      });
-    });
+      }); // ? forEach input Listener
 
-    //todo blur
+
+      elem.addEventListener('blur', (event) => {
+        const target = event.target;
+
+        console.log('blur at:', target);
+        //todo blur
+        validateElemOnBlur(target);
+        
+      }); // ? forEach input Listener
+      
+      
+    });
   };
   inputValidation();
 
