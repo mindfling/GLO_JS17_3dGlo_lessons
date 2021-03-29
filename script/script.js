@@ -462,8 +462,8 @@ window.addEventListener('DOMContentLoaded', function () {
         // Для поля "Ваше имя" Первая буква каждого слова должна приводиться к верхнему регистру, а все остальные — к нижнему
 
         if (elem.name === 'user_message') {
-          // удалить "      " на " "  "------" на "-"
-          //?                     (^[\s\-]+)   (?<=\s)\s+   (?<=\-)\-+  ([\s\-]+$)           
+          // ? удалить "      " на " "  "------" на "-"
+          // ?                         (^[\s\-]+)   (?<=\s)\s+   (?<=\-)\-+  ([\s\-]+$)           
           elem.value = value.replace(/((^[\s\-]+))|((?<=\s)\s+)|((?<=\-)\-+)|([\s\-]+$)/g, '');
           
 
@@ -476,7 +476,7 @@ window.addEventListener('DOMContentLoaded', function () {
             words = words.map(item => (item.substring(0, 1).toUpperCase() + item.substring(1).toLowerCase()) );
             value = words.join(' ');
             // ввод первой большой буквы как здесь
-            // value = value.toString().substring(0,1).toUpperCase() + value.toString().substring(1).toLowerCase();
+            // ? value = value.toString().substring(0,1).toUpperCase() + value.toString().substring(1).toLowerCase();
           } else {
             // ? если в поле ввели пустую строку
             console.log('value null');
@@ -490,18 +490,14 @@ window.addEventListener('DOMContentLoaded', function () {
           
         } else if (elem.name === 'user_phone') {
           // ? удалить ----   ((((   )))) заменить на один
-
+          // также сделать что-то на подобие шаблона
           // ? или просто удалить лишние
-          //?                     (?<=\()\(       (?<=\))\)       (?<=\-)\-         
-          value = value.replace(/((?<=\()\({1,})|((?<=\))\){1,})|((?<=\-)\-{1,})|((?<=\+)\+{1,})/g, '');
           //? + плюсик в номере телефона
-          // ? несколько replace под ряд ???
-          // value = value.replace(/(^(?<=0)0+)|([\-\+]+)/g, '');
-          // value = value.replace(/^[+]+/g, '+');
-          elem.value = value;
+          //?                     (?<=\()\(       (?<=\))\)       (?<=\-)\-         
+          elem.value = value.replace(/((?<=\()\({1,})|((?<=\))\){1,})|((?<=\-)\-{1,})|((?<=\+)\+{1,})/g, '');
 
         } else {
-          console.log('other input был ввод в другое поле');
+          //console.log('other input был ввод в другое поле');
         }
     };
 
@@ -556,7 +552,8 @@ window.addEventListener('DOMContentLoaded', function () {
   inputValidation();
 
 
-  // ! ДЗ 24 Калькулятор стоимости
+
+  // ! ДЗ 24 Калькулятор стоимости по Видео
   const calc = (price = 100) => {
 
     const calcBlock = document.querySelector('.calc-block');
@@ -567,19 +564,15 @@ window.addEventListener('DOMContentLoaded', function () {
     const calcDay = calcBlock.querySelector('.calc-day');
 
     const totalValue = document.getElementById('total'); //span with result
-    console.log('totalValue: ', totalValue);
-
 
     const countSum = () => {
-
+      // * функция расчёта суммы по полям
       // ? let typeValue = calcType.value;  // НО ТАК БЫЛО БЫ ПРОЩЕ ??
       let typeValue = calcType.options[calcType.selectedIndex].value;
 
       let squareValue = +calcSquare.value;
       let countValue = 1;
       let dayValue = 1;
-      // let countValue = +calcCount.value;
-      // let dayValue = +calcDay.value;
       let total = 0;
 
       if (calcCount.value && calcCount.value > 1) {
@@ -596,7 +589,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
       if (typeValue && squareValue) {
         
-        total = price * typeValue * squareValue * countValue * dayValue;
+        // ? parseInt чтобы избежать таких ситуаций 234.0000000006
+        total = parseInt(price * typeValue * squareValue * countValue * dayValue * 100) / 100;
       }
 
       totalValue.textContent = total; // ! результат 
@@ -611,6 +605,7 @@ window.addEventListener('DOMContentLoaded', function () {
           countSum();
       }
 
+      // ? варианты выбора
       // if (target.matches('.calc-type') ||
       //   target.matches('.calc-square') ||
       //   target.matches('.calc-count') ||
@@ -618,6 +613,7 @@ window.addEventListener('DOMContentLoaded', function () {
       //     console.log('test 1');  
       // }
 
+      // ? варианты выбора
       // if (target.matches('select') || target.matches('input')) {
       //   console.log('Выбор по селектору', target.value);
       //   countSum();
@@ -625,7 +621,9 @@ window.addEventListener('DOMContentLoaded', function () {
     });
 
   };
-  calc(100);
+  calc(100); // * расчёт суммы дизайна исходя из цены 100 за 1ед.
+
+
 
 }); // * DOMContentLoaded *
 
