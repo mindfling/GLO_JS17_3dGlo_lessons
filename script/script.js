@@ -466,14 +466,22 @@ window.addEventListener('DOMContentLoaded', function () {
           //?                     (^[\s\-]+)   (?<=\s)\s+   (?<=\-)\-+  ([\s\-]+$)           
           elem.value = value.replace(/((^[\s\-]+))|((?<=\s)\s+)|((?<=\-)\-+)|([\s\-]+$)/g, '');
           
+
         } else if (elem.name === 'user_name') {
 
-          // ? символы кириллицы
-          let words = value.match(/[а-яё]+/ig);
-          words = words.map(item => (item.substring(0, 1).toUpperCase() + item.substring(1).toLowerCase()) );
-          value = words.join(' ');
-          // ввод первой большой буквы как здесь
-          // value = value.toString().substring(0,1).toUpperCase() + value.toString().substring(1).toLowerCase();
+
+          if (value.trim()) {
+            // ? символы кириллицы
+            let words = value.match(/[а-яё]+/ig);
+            words = words.map(item => (item.substring(0, 1).toUpperCase() + item.substring(1).toLowerCase()) );
+            value = words.join(' ');
+            // ввод первой большой буквы как здесь
+            // value = value.toString().substring(0,1).toUpperCase() + value.toString().substring(1).toLowerCase();
+          } else {
+            // ? если в поле ввели пустую строку
+            console.log('value null');
+            value = '';
+          }
           elem.value = value;
           
         } else if (elem.name === 'user_email') {
@@ -547,6 +555,77 @@ window.addEventListener('DOMContentLoaded', function () {
   };
   inputValidation();
 
+
+  // ! ДЗ 24 Калькулятор стоимости
+  const calc = (price = 100) => {
+
+    const calcBlock = document.querySelector('.calc-block');
+
+    const calcType = calcBlock.querySelector('.calc-type');
+    const calcSquare = calcBlock.querySelector('.calc-square');
+    const calcCount = calcBlock.querySelector('.calc-count');
+    const calcDay = calcBlock.querySelector('.calc-day');
+
+    const totalValue = document.getElementById('total'); //span with result
+    console.log('totalValue: ', totalValue);
+
+
+    const countSum = () => {
+
+      // ? let typeValue = calcType.value;  // НО ТАК БЫЛО БЫ ПРОЩЕ ??
+      let typeValue = calcType.options[calcType.selectedIndex].value;
+
+      let squareValue = +calcSquare.value;
+      let countValue = 1;
+      let dayValue = 1;
+      // let countValue = +calcCount.value;
+      // let dayValue = +calcDay.value;
+      let total = 0;
+
+      if (calcCount.value && calcCount.value > 1) {
+        countValue += (+calcCount.value - 1) / 10;
+      } else {
+        countValue = 1;
+      }
+
+      if (calcDay.value && calcDay.value < 5) {
+        dayValue *= 2;
+      } else if (calcDay.value < 10) {
+        dayValue *= 1.5;
+      }
+
+      if (typeValue && squareValue) {
+        
+        total = price * typeValue * squareValue * countValue * dayValue;
+      }
+
+      totalValue.textContent = total; // ! результат 
+    }
+
+    // * событие изменения значения поля
+    calcBlock.addEventListener('change', (event) => {
+      let target = event.target;
+
+      if (target === calcType || target === calcSquare ||
+          target === calcCount || target === calcDay ) {
+          countSum();
+      }
+
+      // if (target.matches('.calc-type') ||
+      //   target.matches('.calc-square') ||
+      //   target.matches('.calc-count') ||
+      //   target.matches('.calc-day') ) {
+      //     console.log('test 1');  
+      // }
+
+      // if (target.matches('select') || target.matches('input')) {
+      //   console.log('Выбор по селектору', target.value);
+      //   countSum();
+      // }
+    });
+
+  };
+  calc(100);
 
 }); // * DOMContentLoaded *
 
