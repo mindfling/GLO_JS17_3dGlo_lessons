@@ -1,7 +1,7 @@
 // запуск после загрузки страници тоже что и defer
 window.addEventListener('DOMContentLoaded', function () {
   'use strict';
-  //! Lesson 23
+  //! Lesson 26
   console.log('This is 3dGLO');
 
   //Timer
@@ -396,7 +396,7 @@ window.addEventListener('DOMContentLoaded', function () {
   slider();
 
 
-  // ! ДЗ 23 наша КОММАНДА .command
+  // наша КОММАНДА .command
   // 1) В нашем проекте есть Блок с картинками Наша Команда
   const ourCommand = () => {
 
@@ -405,13 +405,13 @@ window.addEventListener('DOMContentLoaded', function () {
     // let src; // запомним начальный адрес картинки
     
     commandPhotos.forEach( photo => {
-      let src; // запомним начальный адрес картинки // ! В ЗАМЫКАНИИ
+      let src; // запомним начальный адрес картинки // * В ЗАМЫКАНИИ
 
       photo.addEventListener('mouseenter', (event) => {
         const target = event.target;
         if (target.matches('.command__photo')) { //? если совпал адресс фото
           src = photo.src;
-          photo.src = photo.dataset.img; //! меняем адрес фото при наведении
+          photo.src = photo.dataset.img; //* меняем адрес фото при наведении
         }
       });
 
@@ -419,7 +419,7 @@ window.addEventListener('DOMContentLoaded', function () {
         const target = event.target;
         if (target.matches('.command__photo')) { //? если совпал адресс фото
           if (src) {
-            photo.src = src; //! возвращаем назад фоту
+            photo.src = src; //* возвращаем назад фоту
           };
         }
       });
@@ -429,7 +429,7 @@ window.addEventListener('DOMContentLoaded', function () {
   ourCommand();
 
 
-  // ! ДЗ 23 Валидация форм 
+  // Валидация форм Lesson 23
   const inputValidation = () => {
 
 
@@ -553,7 +553,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 
-  // ! ДЗ 24 Калькулятор стоимости по Видео
+  // ДЗ 24 Калькулятор стоимости по Видео
   const calc = (price = 100) => {
 
     const calcBlock = document.querySelector('.calc-block');
@@ -593,7 +593,7 @@ window.addEventListener('DOMContentLoaded', function () {
         total = parseInt(price * typeValue * squareValue * countValue * dayValue * 100) / 100;
       }
 
-      totalValue.textContent = total; // ! результат 
+      totalValue.textContent = total; // * результат 
     }
 
     // * событие изменения значения поля
@@ -624,6 +624,30 @@ window.addEventListener('DOMContentLoaded', function () {
   calc(100); // * расчёт суммы дизайна исходя из цены 100 за 1ед.
 
 
+  // ! ДЗ 26 
+  // send-ajax-json
+  const sendForm = () => {
+
+    const errorMessage = 'Что-то пошло не так . . .';
+    const loadMessage = 'Загрузка из сервера . . .';
+    const successMessage = 'Спасибо! Мы скоро с Вами свяжемся!';
+
+    const form = document.getElementById('form1');
+    console.log('form: ', form);
+
+    const statusMessage = document.createElement('div');
+    statusMessage.textContent = 'message here';
+    statusMessage.style.cssText = 'font-size:2rem;';
+
+    form.addEventListener('submit', (event) => {
+      
+      event.preventDefault();
+
+      console.log('submit', event.target);
+    });
+    
+  };
+  sendForm();
 
 }); // * DOMContentLoaded *
 
