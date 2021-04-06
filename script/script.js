@@ -635,15 +635,78 @@ window.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('form1');
     console.log('form: ', form);
 
+    // создаем элемент ответа пользователя
     const statusMessage = document.createElement('div');
-    statusMessage.textContent = 'message here';
-    statusMessage.style.cssText = 'font-size:2rem;';
+    statusMessage.textContent = `Loading... message here`;
+    statusMessage.style.cssText = 'font-size:2rem;color:lawngreen;'; // todo
 
+    //слушатель на всю форму
     form.addEventListener('submit', (event) => {
-      
       event.preventDefault();
+      form.append(statusMessage);
+      // form.appendChild(statusMessage);
+      // console.log('submit', event.target);
 
-      console.log('submit', event.target);
+      //! formData данные формы отправляем в виде формы
+      const formData = new FormData(form);
+      console.log('formData: ', formData);
+      console.log('formData entries: ', formData.entries());
+      console.log('formData entries[]: ', [...formData.entries()]);
+      
+      // console.log('request.readyState: ', request.readyState);
+      // console.log('request.responseType: ', request.responseType);
+      // console.log('request.status: ', request.status);
+        
+      let getRequestUrl = '';
+      getRequestUrl += '/gettest.php?param=test';
+
+      let arr = [...formData.entries()];
+      for (let val of arr) {
+        console.log(val);
+
+        for (let key in val) {
+          if (val.hasOwnProperty(key)) {
+            console.log(key, '->', val[key]);
+            //? добавим в строку get запроса
+            getRequestUrl += `&${key}=${val[key]}`;
+          }
+        }
+      }
+      console.log('getRequestUrl: ', getRequestUrl);
+
+
+      const request = new XMLHttpRequest();
+      request.open('GET', getRequestUrl, true); //? method url login pass
+      // request.open('GET', '/gettest.php?user_name=aoeu', true); //? method url login pass
+      // request.open('POST', '/server.php', true);  //? method url login pass
+
+      request.setRequestHeader('Content-Type', 'multipart/form-data'); //? заголовок в formData
+
+
+      // request.send(formData); //? POST body
+      request.send(formData); //? GET body
+      
+      // вешаем слушатель на ответ сервера
+      request.addEventListener('readystatechange', () => {
+
+        if (request.readyState != 4) {
+          return ;
+        }
+        
+
+        if (request.status == 200) {
+          console.log('request.status: ', request.status);
+          console.log('good');
+
+          const response = request.responseText;
+          console.log('response: ', response);
+
+          statusMessage.textContent = response;
+        } else {
+          console.log('error');
+        }
+      });
+
     });
     
   };
