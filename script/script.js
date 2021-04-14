@@ -477,7 +477,7 @@ window.addEventListener('DOMContentLoaded', function () {
             // ? value = value.toString().substring(0,1).toUpperCase() + value.toString().substring(1).toLowerCase();
           } else {
             // ? если в поле ввели пустую строку
-            console.log('value null');
+            // console.log('value null');
             value = '';
           }
           elem.value = value;
@@ -603,19 +603,6 @@ window.addEventListener('DOMContentLoaded', function () {
           countSum();
       }
 
-      // ? варианты выбора
-      // if (target.matches('.calc-type') ||
-      //   target.matches('.calc-square') ||
-      //   target.matches('.calc-count') ||
-      //   target.matches('.calc-day') ) {
-      //     console.log('test 1');  
-      // }
-
-      // ? варианты выбора
-      // if (target.matches('select') || target.matches('input')) {
-      //   console.log('Выбор по селектору', target.value);
-      //   countSum();
-      // }
     });
 
   };
@@ -650,36 +637,32 @@ window.addEventListener('DOMContentLoaded', function () {
       const request = new XMLHttpRequest();
       // вешаем слушатель на ответ сервера
       request.addEventListener('readystatechange', () => {
-        // statusMessage.textContent = loadMessage; // ** здесь сообщение НЕ МЕНЯЕТСЯ ни че го
 
         if (request.readyState !== 4) {
           statusMessage.textContent = loadMessage; // ** здесь сообщение меняется
-          // console.log('request.readyState: ', request.readyState);
           // пока не дойдем до состояния 4 ВЫХОД т е в любом другом случае кроме состояния 4 сообщение Загрузка
           return;
         }
 
         if (request.status == 200) {
+          // * значит сервер успешно получил и что-то там нам успешно отправил
           const response = request.responseText;
-          statusMessage.textContent = response;
-          // console.log('request.status: ', request.status);
-          // console.log('good');
-          // console.log('response: ', response);
+          statusMessage.textContent = successMessage;
+          console.log('Server Succses');
 
         } else {
           statusMessage.textContent = errorMessage;
-          // console.error('error');
+          console.error('Server Error:', request.status, request.statusText);
         }
       });
+
       request.open('POST', '/server.php', true); //? method url login pass
       request.setRequestHeader('Content-Type', 'application/json'); //? заголовок в JSON
       // request.setRequestHeader('Content-Type', 'multipart/form-data'); //? заголовок в formData
       // request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded'); //? заголовок как из обычной формы html form submit
       
-      //! formData данные формы отправляем в виде формы
+      // забираем данные из формы
       const formData = new FormData(form);
-      // console.log('formData 1: ', formData);
-
 
       let body = {};
       
@@ -689,12 +672,11 @@ window.addEventListener('DOMContentLoaded', function () {
       // }
       // console.log('body1:', body);
       
-
       // * variant 2
       formData.forEach((val, key) => {
         body[key] = val;
       });
-      console.log('body2:', body);
+      // console.log('body2:', body);
 
       // * lets send json string to Server in body
       request.send(JSON.stringify(body)); //? POST body
