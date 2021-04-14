@@ -4,6 +4,7 @@ window.addEventListener('DOMContentLoaded', function () {
   //! Lesson 26
   console.log('This is 3dGLO');
 
+
   //Timer
   const countTimer = (deadline) => {
     const timerHours = document.querySelector('#timer-hours');
@@ -49,7 +50,6 @@ window.addEventListener('DOMContentLoaded', function () {
   //тест таймера на дату день программиста 256 день в году
   // countTimer('9 13 2021');
   countTimer('9 13 2021');
-
 
 
   // Main Menu
@@ -132,6 +132,7 @@ window.addEventListener('DOMContentLoaded', function () {
     btnMenu.addEventListener('click', handlerMenu); //клик по кнопке .menu
   };
   toggleMenu();
+
 
   //Popup
   const togglePopUp = () => {
@@ -396,13 +397,11 @@ window.addEventListener('DOMContentLoaded', function () {
   slider();
 
 
-  // наша КОММАНДА .command
-  // 1) В нашем проекте есть Блок с картинками Наша Команда
+  // наша КОММАНДА при наведении в Блоке на картинку Наша Команда меняется фото
   const ourCommand = () => {
 
     const command = document.querySelector('.command');
     const commandPhotos = command.querySelectorAll('.command__photo');
-    // let src; // запомним начальный адрес картинки
     
     commandPhotos.forEach( photo => {
       let src; // запомним начальный адрес картинки // * В ЗАМЫКАНИИ
@@ -429,9 +428,8 @@ window.addEventListener('DOMContentLoaded', function () {
   ourCommand();
 
 
-  // Валидация форм Lesson 23
+  // Валидация форм 
   const inputValidation = () => {
-
 
     const calcItems = document.querySelectorAll('.calc-item');
     const inputFields = document.querySelectorAll('input');
@@ -553,7 +551,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 
-  // ДЗ 24 Калькулятор стоимости по Видео
+  // Калькулятор стоимости по ВидеоУроку
   const calc = (price = 100) => {
 
     const calcBlock = document.querySelector('.calc-block');
@@ -624,91 +622,86 @@ window.addEventListener('DOMContentLoaded', function () {
   calc(100); // * расчёт суммы дизайна исходя из цены 100 за 1ед.
 
 
+
   // ! ДЗ 26 
   // send-ajax-json
   const sendForm = () => {
 
+    // вот такие сообщения
     const errorMessage = 'Что-то пошло не так . . .';
     const loadMessage = 'Загрузка из сервера . . .';
     const successMessage = 'Спасибо! Мы скоро с Вами свяжемся!';
 
     const form = document.getElementById('form1');
-    console.log('form: ', form);
+    // console.log('form: ', form);
 
     // создаем элемент ответа пользователя
-    const statusMessage = document.createElement('div');
-    statusMessage.textContent = `Loading... message here`;
-    statusMessage.style.cssText = 'font-size:2rem;color:lawngreen;'; // todo
+    const statusMessage = document.createElement('div'); // сам элемент
+    statusMessage.textContent = `Loading...`; // текст сообщения
+    statusMessage.style.cssText = 'font-size:2rem;color:lawngreen;'; // стили
 
-    //слушатель на всю форму
+    //вешаем слушатель на всю форму
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      form.append(statusMessage);
-      // form.appendChild(statusMessage);
-      // console.log('submit', event.target);
+      form.append(statusMessage); // добавить ответ Загрузка... на страницу
 
-      //! formData данные формы отправляем в виде формы
-      const formData = new FormData(form);
-      console.log('formData: ', formData);
-      console.log('formData entries: ', formData.entries());
-      console.log('formData entries[]: ', [...formData.entries()]);
-      
-      // console.log('request.readyState: ', request.readyState);
-      // console.log('request.responseType: ', request.responseType);
-      // console.log('request.status: ', request.status);
-        
-      let getRequestUrl = '';
-      getRequestUrl += '/gettest.php?param=test';
-
-      let arr = [...formData.entries()];
-      for (let val of arr) {
-        console.log(val);
-
-        for (let key in val) {
-          if (val.hasOwnProperty(key)) {
-            console.log(key, '->', val[key]);
-            //? добавим в строку get запроса
-            getRequestUrl += `&${key}=${val[key]}`;
-          }
-        }
-      }
-      console.log('getRequestUrl: ', getRequestUrl);
 
 
       const request = new XMLHttpRequest();
-      request.open('GET', getRequestUrl, true); //? method url login pass
-      // request.open('GET', '/gettest.php?user_name=aoeu', true); //? method url login pass
-      // request.open('POST', '/server.php', true);  //? method url login pass
-
-      request.setRequestHeader('Content-Type', 'multipart/form-data'); //? заголовок в formData
-
-
-      // request.send(formData); //? POST body
-      request.send(formData); //? GET body
-      
       // вешаем слушатель на ответ сервера
       request.addEventListener('readystatechange', () => {
+        // statusMessage.textContent = loadMessage; // ** здесь сообщение НЕ МЕНЯЕТСЯ ни че го
 
-        if (request.readyState != 4) {
-          return ;
+        if (request.readyState !== 4) {
+          statusMessage.textContent = loadMessage; // ** здесь сообщение меняется
+          // console.log('request.readyState: ', request.readyState);
+          // пока не дойдем до состояния 4 ВЫХОД т е в любом другом случае кроме состояния 4 сообщение Загрузка
+          return;
         }
-        
 
         if (request.status == 200) {
-          console.log('request.status: ', request.status);
-          console.log('good');
-
           const response = request.responseText;
-          console.log('response: ', response);
-
           statusMessage.textContent = response;
+          // console.log('request.status: ', request.status);
+          // console.log('good');
+          // console.log('response: ', response);
+
         } else {
-          console.log('error');
+          statusMessage.textContent = errorMessage;
+          // console.error('error');
         }
       });
+      request.open('POST', '/server.php', true); //? method url login pass
+      request.setRequestHeader('Content-Type', 'application/json'); //? заголовок в JSON
+      // request.setRequestHeader('Content-Type', 'multipart/form-data'); //? заголовок в formData
+      // request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded'); //? заголовок как из обычной формы html form submit
+      
+      //! formData данные формы отправляем в виде формы
+      const formData = new FormData(form);
+      // console.log('formData 1: ', formData);
 
+
+      let body = {};
+      
+      // * variant 1
+      // for (const val of formData.entries()) {
+      //   body[val[0]] = val[1];
+      // }
+      // console.log('body1:', body);
+      
+
+      // * variant 2
+      formData.forEach((val, key) => {
+        body[key] = val;
+      });
+      console.log('body2:', body);
+
+      // * lets send json string to Server in body
+      request.send(JSON.stringify(body)); //? POST body
+      // request.send(formData); //? POST formData body
+      // request.send(body); //? POST body
     });
-    
+
   };
   sendForm();
 

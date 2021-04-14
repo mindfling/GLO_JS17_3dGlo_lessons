@@ -1,4 +1,3 @@
 <?php
-echo "Hello this answer "; //todo my hello 
-sleep(1); // todo time at seconds
+sleep(1); // todo time out at seconds for php Server
 echo $_SERVER['REMOTE_ADDR'];
