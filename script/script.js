@@ -631,9 +631,42 @@ window.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', (event) => {
       event.preventDefault();
       form.append(statusMessage); // добавить ответ Загрузка... на страницу
+      
+      // работа с формой отдельно!!!!
+      const formData = new FormData(form);
+
+      let body = {};
+
+      // * variant 1
+      // for (const val of formData.entries()) {
+      //   body[val[0]] = val[1];
+      // }
+      // console.log('body1:', body);
+
+      // * variant 2
+      formData.forEach((val, key) => {
+        body[key] = val;
+      });
+      // console.log('body2:', body);
+
+      postData(body, () => {
+        console.log(200000000);
+          statusMessage.textContent = successMessage;
+          console.log('Server Succses');
+      },
+      (error) => {
+        console.log(400000000004);
+          statusMessage.textContent = errorMessage;
+          console.error('Server Error:', request.status, request.statusText);
+      }
+      );
 
 
+    });
 
+
+    // ! каждая функция должна выполнять свое действие
+    const postData = (body, outputData, errorData) => {
       const request = new XMLHttpRequest();
       // вешаем слушатель на ответ сервера
       request.addEventListener('readystatechange', () => {
@@ -646,13 +679,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
         if (request.status == 200) {
           // * значит сервер успешно получил и что-то там нам успешно отправил
-          const response = request.responseText;
-          statusMessage.textContent = successMessage;
-          console.log('Server Succses');
+
+          outputData();
 
         } else {
-          statusMessage.textContent = errorMessage;
-          console.error('Server Error:', request.status, request.statusText);
+
+          errorData(request.status);
         }
       });
 
@@ -660,29 +692,12 @@ window.addEventListener('DOMContentLoaded', function () {
       request.setRequestHeader('Content-Type', 'application/json'); //? заголовок в JSON
       // request.setRequestHeader('Content-Type', 'multipart/form-data'); //? заголовок в formData
       // request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded'); //? заголовок как из обычной формы html form submit
-      
-      // забираем данные из формы
-      const formData = new FormData(form);
 
-      let body = {};
-      
-      // * variant 1
-      // for (const val of formData.entries()) {
-      //   body[val[0]] = val[1];
-      // }
-      // console.log('body1:', body);
-      
-      // * variant 2
-      formData.forEach((val, key) => {
-        body[key] = val;
-      });
-      // console.log('body2:', body);
 
-      // * lets send json string to Server in body
-      request.send(JSON.stringify(body)); //? POST body
-      // request.send(formData); //? POST formData body
-      // request.send(body); //? POST body
-    });
+
+      request.send(JSON.stringify(body)); //? POST send json string to Server in body
+      // return 
+    }
 
   };
   sendForm();
