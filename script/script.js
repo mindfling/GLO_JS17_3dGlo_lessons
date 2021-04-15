@@ -630,19 +630,21 @@ window.addEventListener('DOMContentLoaded', function () {
     statusMessage.style.cssText = 'font-size:2rem;color:white;padding:5px 0'; // стили
 
     const clearForm = () => {
-
       form.querySelectorAll('input').forEach( item => {
         item.value = '';
       });
 
-      // нужно ли очистить и сообщение о статуче внизу формы // ???
-      // statusMessage.remove();
+      // нужно ли очистить и сообщение о внизу через некоторое время // ???
+      setTimeout( () => {
+        statusMessage.remove();
+      }, 7500);
     };
+    
 
     //вешаем слушатель на всю форму
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      form.append(statusMessage); // добавить ответ Загрузка... на страницу
+      form.appendChild(statusMessage); // добавить ответ Загрузка... на страницу
       
       
       // работа с формой отдельно!!!!
@@ -654,13 +656,11 @@ window.addEventListener('DOMContentLoaded', function () {
       // for (const val of formData.entries()) {
       //   body[val[0]] = val[1];
       // }
-      // console.log('body1:', body);
 
       // * variant 2
       formData.forEach((val, key) => {
         body[key] = val;
       });
-      // console.log('body2:', body);
 
       // * работаем с запросом к серверу здесь
       postData(body, 
@@ -685,20 +685,19 @@ window.addEventListener('DOMContentLoaded', function () {
       const request = new XMLHttpRequest();
       // вешаем слушатель на ответ сервера
       request.addEventListener('readystatechange', () => {
+        // ** здесь в этом месте пару коммитов назад сообщение Загрузка... не работало ???
 
         if (request.readyState !== 4) {
-          statusMessage.textContent = loadMessage; // ** здесь сообщение меняется
-          // пока не дойдем до состояния 4 ВЫХОД т е в любом другом случае кроме состояния 4 сообщение Загрузка
+          // * здесь сообщений не надо
+          // пока не дойдем до состояния 4 ВЫХОД т.е. в любом другом случае кроме состояния 4 сообщение Загрузка...
           return;
         }
 
         if (request.status == 200) {
           // * значит сервер успешно получил и что-то там нам успешно отправил
-
           outputData();
 
         } else {
-
           errorData(request.status);
         }
       });
@@ -707,7 +706,6 @@ window.addEventListener('DOMContentLoaded', function () {
       request.setRequestHeader('Content-Type', 'application/json'); //? заголовок в JSON
 
       request.send(JSON.stringify(body)); //? POST send json string to Server in body
-      // return 
     }
 
   };
