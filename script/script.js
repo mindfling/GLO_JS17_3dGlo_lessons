@@ -612,25 +612,38 @@ window.addEventListener('DOMContentLoaded', function () {
 
   // ! ДЗ 26 
   // send-ajax-json
-  const sendForm = () => {
+  const sendForm = (formId) => {
+    // * receive formId // string form id
 
     // вот такие сообщения
     const errorMessage = 'Что-то пошло не так . . .';
     const loadMessage = 'Загрузка из сервера . . .';
-    const successMessage = 'Спасибо! Мы скоро с Вами свяжемся!';
+    const successMessage = 'Спасибо! Данные получены! Мы скоро с Вами свяжемся!';
 
-    const form = document.getElementById('form1');
-    // console.log('form: ', form);
+    // const form = document.getElementById('form1');
+    const form = document.getElementById(formId);
+    console.log('Подключено form: ', form);
 
     // создаем элемент ответа пользователя
     const statusMessage = document.createElement('div'); // сам элемент
-    statusMessage.textContent = `Loading...`; // текст сообщения
-    statusMessage.style.cssText = 'font-size:2rem;color:lawngreen;'; // стили
+    statusMessage.textContent = loadMessage;  // текст сообщения
+    statusMessage.style.cssText = 'font-size:2rem;color:white;padding:5px 0'; // стили
+
+    const clearForm = () => {
+
+      form.querySelectorAll('input').forEach( item => {
+        item.value = '';
+      });
+
+      // нужно ли очистить и сообщение о статуче внизу формы // ???
+      // statusMessage.remove();
+    };
 
     //вешаем слушатель на всю форму
     form.addEventListener('submit', (event) => {
       event.preventDefault();
       form.append(statusMessage); // добавить ответ Загрузка... на страницу
+      
       
       // работа с формой отдельно!!!!
       const formData = new FormData(form);
@@ -649,19 +662,21 @@ window.addEventListener('DOMContentLoaded', function () {
       });
       // console.log('body2:', body);
 
-      postData(body, () => {
-        console.log(200000000);
+      // * работаем с запросом к серверу здесь
+      postData(body, 
+        () => {
           statusMessage.textContent = successMessage;
           console.log('Server Succses');
-      },
-      (error) => {
-        console.log(400000000004);
-          statusMessage.textContent = errorMessage;
-          console.error('Server Error:', request.status, request.statusText);
-      }
+        },
+        (error) => {
+            statusMessage.textContent = errorMessage;
+            console.error('Server Error:', request.status, request.statusText);
+        }
       );
 
-
+      // todo 
+      // function clearFormDataInputs();
+      clearForm();  
     });
 
 
@@ -690,17 +705,18 @@ window.addEventListener('DOMContentLoaded', function () {
 
       request.open('POST', '/server.php', true); //? method url login pass
       request.setRequestHeader('Content-Type', 'application/json'); //? заголовок в JSON
-      // request.setRequestHeader('Content-Type', 'multipart/form-data'); //? заголовок в formData
-      // request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded'); //? заголовок как из обычной формы html form submit
-
-
 
       request.send(JSON.stringify(body)); //? POST send json string to Server in body
       // return 
     }
 
   };
-  sendForm();
+  // sendForm();
+
+  // todo
+  sendForm('form1'); // user-form main-form
+  sendForm('form2'); // user-form footer-form
+  sendForm('form3'); // user-form popup
 
 }); // * DOMContentLoaded *
 
