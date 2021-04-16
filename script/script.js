@@ -602,8 +602,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 
-  // ! ДЗ 26 Работа с JSON, AJAX. Получение и отправка данных на сервер
-  // send-ajax-json
+  // ! ДЗ 28 Переписать скрипт для отправки данных с формы, используя промисы
+  // send-ajax-json by using Promise
   const sendForm = (formId) => {
     // * receive formId // string form id
 
@@ -612,58 +612,28 @@ window.addEventListener('DOMContentLoaded', function () {
     const loadMessage = 'Загрузка из сервера . . .';
     const successMessage = 'Спасибо! Данные получены! Мы скоро с Вами свяжемся!';
 
+    // находим форму по строке id
     const form = document.getElementById(formId);
     console.log('Подключено form: ', form);
 
     // создаем элемент ответа пользователя
-    const statusMessage = document.createElement('div'); // сам элемент
-    statusMessage.textContent = loadMessage;  // текст сообщения
-    statusMessage.style.cssText = 'font-size:1.8rem;color:white;padding:5px 0'; // стили
-    
+    const statusMessage = document.createElement('div');
+    statusMessage.textContent = loadMessage;
+    statusMessage.style.cssText = 'font-size:1.8rem;color:white;padding:5px 0';
+
     const clearForm = () => {
-      form.querySelectorAll('input').forEach( item => {
+      form.querySelectorAll('input').forEach(item => {
         item.value = '';
       });
-      
-      // нужно ли очистить и сообщение о внизу через некоторое время // ???
-      setTimeout( () => {
+
+      // очищаем сообщение о внизу через некоторое время // ???
+      setTimeout(() => {
         statusMessage.remove();
       }, 7500);
     };
-    
-    
-    //вешаем слушатель на всю форму
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-      form.appendChild(statusMessage); // добавить ответ Загрузка... на страницу
-      statusMessage.textContent = loadMessage;  // текст сообщения // ??? понятия не имею почему эта строка срабатывает в такой последовательности
-      
-      const formData = new FormData(form);
-
-      let body = {};
-      formData.forEach((val, key) => {
-        body[key] = val;
-      });
-
-      // * работаем с запросом к серверу здесь
-      postData(body, 
-        () => {
-          statusMessage.textContent = successMessage;
-          console.log('Server Succses');
-        },
-        (error) => {
-            statusMessage.textContent = errorMessage;
-            console.error('Server Error:', request.status, request.statusText);
-        }
-      );
-
-      // todo 
-      // function clearFormDataInputs();
-      clearForm();  
-    });
 
 
-    // ! каждая функция должна выполнять свое действие
+    // ! эта функция выполняет действие: отправляет и получает запросы сервера
     const postData = (body, outputData, errorData) => {
       const request = new XMLHttpRequest();
       // вешаем слушатель на ответ сервера сразу же после создания запроса
@@ -686,7 +656,43 @@ window.addEventListener('DOMContentLoaded', function () {
       request.send(JSON.stringify(body)); //? POST отправляем json строку на сервер в body
     };
 
-  };
+    
+
+    //вешаем слушатель на всю форму
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      form.appendChild(statusMessage); // добавить ответ Загрузка... на страницу
+      statusMessage.textContent = loadMessage; // текст сообщения // ??? понятия не имею почему эта строка срабатывает в такой последовательности
+
+      const formData = new FormData(form);
+
+      let body = {};
+      // перебираем значения полей формы
+      formData.forEach((val, key) => {
+        body[key] = val;
+      });
+
+      // * работаем с запросом к серверу здесь
+      postData(body,
+        () => {
+          statusMessage.textContent = successMessage;
+          console.log('Server Succses');
+        },
+        (error) => {
+          statusMessage.textContent = errorMessage;
+          console.error('Server Error:', request.status, request.statusText);
+        }
+      );
+
+      clearForm(); // очищаем данные полей текущей формы
+    });
+
+
+
+
+
+
+  }; // * sendForm
 
   // * вешаем на каждую форму отдельно по её id
   sendForm('form1'); // user-form main-form
