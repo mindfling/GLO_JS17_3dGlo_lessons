@@ -26,3 +26,6 @@ const ourCommand = () => {
     });
   }); //forEach
 };
+
+
+export default ourCommand;

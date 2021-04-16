@@ -5,7 +5,7 @@ const inputValidation = () => {
 
   // * форма калькулятора Рассчитать стоимость
   calcItems.forEach((item) => {
-    // 2)  В калькуляторе разрешить ввод только цифр:
+    // В калькуляторе разрешить ввод только цифр:
     if (!item.classList.contains('calc-type')) {
       item.addEventListener('input', (event) => {
         let target = event.target;
@@ -17,7 +17,7 @@ const inputValidation = () => {
   const validateElemOnBlur = (elem) => {
     let value = elem.value;
     //* blur срабатывает при потере перефокуса с поля ввода
-    // 6) При потере фокуса(событие blur) реализовать проверку на корректность введённого значения в полях ввода
+    // При потере фокуса(событие blur) реализовать проверку на корректность введённого значения в полях ввода
     // и замена его на корректное при необходимости по правилам:
 
     // Должны удаляться все символы, кроме допустимых
@@ -87,3 +87,6 @@ const inputValidation = () => {
     }); // ? forEach input Listener
   });
 };
+
+
+export default inputValidation;

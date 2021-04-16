@@ -1,22 +1,22 @@
-//функция генерирует точки dots на слайде
-// todo !!! функция генерирует точки dots на слайде
-const addSliderDots = () => {
-  const portfolioDotsParent = document.querySelector('.portfolio-dots');
-  const slide = document.querySelectorAll('.portfolio-item');
-
-  slide.forEach((item, index) => {
-    const li = document.createElement('li');
-    li.classList.add('dot');
-    if (index === 0) {
-      li.classList.add('dot-active'); //* активный 1й dot
-    }
-    portfolioDotsParent.append(li);
-  });
-};
-addSliderDots();
-
 // Слайдер с точечками
 const slider = () => {
+  //функция генерирует точки dots на слайде
+  // todo !!! функция генерирует точки dots на слайде
+  const addSliderDots = () => {
+    const portfolioDotsParent = document.querySelector('.portfolio-dots');
+    const slide = document.querySelectorAll('.portfolio-item');
+
+    slide.forEach((item, index) => {
+      const li = document.createElement('li');
+      li.classList.add('dot');
+      if (index === 0) {
+        li.classList.add('dot-active'); //* активный 1й dot
+      }
+      portfolioDotsParent.append(li);
+    });
+  };
+  addSliderDots();
+
   const slide = document.querySelectorAll('.portfolio-item'),
     dot = document.querySelectorAll('.dot'),
     slider = document.querySelector('.portfolio-content');
@@ -103,3 +103,6 @@ const slider = () => {
 
   startSlide(2000);
 };
+
+
+export default slider;

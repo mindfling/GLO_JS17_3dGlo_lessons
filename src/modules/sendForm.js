@@ -72,3 +72,6 @@ const sendForm = (formId) => {
     clearForm(); // очищаем данные полей текущей формы
   }); // * submit form
 }; // * sendForm
+
+
+export default sendForm;
