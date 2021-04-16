@@ -1,7 +1,7 @@
 // запуск после загрузки страници тоже что и defer
 window.addEventListener('DOMContentLoaded', function () {
   'use strict';
-  //! Lesson 26
+  //! Lesson 29
   console.log('This is 3dGLO');
 
 
@@ -56,17 +56,15 @@ window.addEventListener('DOMContentLoaded', function () {
   const toggleMenu = (event) => {
     const btnMenu = document.querySelector('.menu');
     const menu = document.querySelector('menu');
-    // const closeBtn = document.querySelector('.close-btn');
-    // const menuItems = menu.querySelectorAll('ul>li'); //коллекция всех элементов подменю
 
-    //!? todo простая анимация make it by css
+    // * простая анимация make it by css
     const handlerMenuCSS = () => {
       menu.classList.toggle('active-menu');
     };
 
-    //!? плавная анимация главного меню by js
+    // * плавная анимация главного меню by js
     const handlerMenu = (event) => {
-      // варианты расчета процента сдвига анимации
+      // ?? варианты расчета процента сдвига анимации на выбор
       const animatePercent = (count) => {
         return -99 + 0.07 * (count) ** 2; //? //! еще вариант плавно назад и вперед
       };
@@ -115,12 +113,10 @@ window.addEventListener('DOMContentLoaded', function () {
       const target = event.target;
 
       if (target.matches('.close-btn')) {
-        // клик по кнопке BUTTON CLOSE
-        //todoo закрыть и уехать
+        // клик по кнопке BUTTON CLOSE закрыть и уехать
         handlerMenu();
       } else if (target.matches('a')) {
-        // клик по ссылке
-        //todoo просто закрыть меню
+        // клик по ссылке просто закрыть меню
         handlerMenu();
       } else {
         // клик по остальному меню ничего не делать
@@ -213,7 +209,7 @@ window.addEventListener('DOMContentLoaded', function () {
         popupContent.style.top = `${needCssHeight}px`;
       }
 
-      document.addEventListener('keydown', escapeHandler); //todo добавим событие слушателя клавиатуры после popup
+      document.addEventListener('keydown', escapeHandler); // добавим событие слушателя клавиатуры после popup
     };
 
     
@@ -634,7 +630,7 @@ window.addEventListener('DOMContentLoaded', function () {
     // const postData = (body, outputData, errorData) => {
     const postData = (body) => {
 
-      // * in fetch
+      // * отправляем fetch запрос
       return fetch('server.php', {
         method: 'POST',
         headers: {
@@ -643,23 +639,6 @@ window.addEventListener('DOMContentLoaded', function () {
         body: JSON.stringify(body)
       }); //fetch запрос
 
-      // * in Promise
-      // return new Promise( (resolve, reject) => {
-      //   const request = new XMLHttpRequest();
-      //   request.addEventListener('readystatechange', () => {
-      //     if (request.readyState !== 4) {
-      //       return;
-      //     }
-      //     if (request.status === 200) {
-      //       resolve(); // запрос завершился без ошибок
-      //     } else {
-      //       reject(request.status); // была ошибка в запросе
-      //     }
-      //   });
-      //   request.open('POST', 'server.php'); //? method url async=true
-      //   request.setRequestHeader('Content-Type', 'application/json'); //? заголовок запроса
-      //   request.send(JSON.stringify(body)); //? POST запрос
-      // });
     }; // postData
 
 
@@ -680,7 +659,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
       // * работаем с запросом к серверу здесь
       postData(body)
-      .then( () => {
+      .then( (response) => {
+
+          if (response.status !== 200) {
+            // отбрасываем ошибку не 200
+            throw new Error('Response status code is not a 200');
+          }
           statusMessage.textContent = successMessage;
           console.log('Server Succses');
       })
