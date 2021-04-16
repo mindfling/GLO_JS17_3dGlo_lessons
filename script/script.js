@@ -450,7 +450,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
     const validateElemOnBlur = (elem) => {
       let value = elem.value;
-        //todo blur срабатывает при потере перефокуса с поля ввода
+        //* blur срабатывает при потере перефокуса с поля ввода
         // 6) При потере фокуса(событие blur) реализовать проверку на корректность введённого значения в полях ввода 
         // и замена его на корректное при необходимости по правилам:
 
@@ -460,7 +460,6 @@ window.addEventListener('DOMContentLoaded', function () {
         // Для поля "Ваше имя" Первая буква каждого слова должна приводиться к верхнему регистру, а все остальные — к нижнему
 
         if (elem.name === 'user_message') {
-          // ? удалить "      " на " "  "------" на "-"
           // ?                         (^[\s\-]+)   (?<=\s)\s+   (?<=\-)\-+  ([\s\-]+$)           
           elem.value = value.replace(/((^[\s\-]+))|((?<=\s)\s+)|((?<=\-)\-+)|([\s\-]+$)/g, '');
 
@@ -471,10 +470,9 @@ window.addEventListener('DOMContentLoaded', function () {
             let words = value.match(/[а-яё]+/ig);
             words = words.map(item => (item.substring(0, 1).toUpperCase() + item.substring(1).toLowerCase()) );
             value = words.join(' ');
-            // ввод первой большой буквы как здесь
-            // ? value = value.toString().substring(0,1).toUpperCase() + value.toString().substring(1).toLowerCase();
+
           } else {
-            // ? если в поле ввели пустую строку
+            // ? а что если в поле ввели пустую строку
             value = '';
           }
           elem.value = value;
@@ -502,15 +500,15 @@ window.addEventListener('DOMContentLoaded', function () {
         let value = target.value;
 
         if (elem.name === 'user_name') { 
-          // TODO ДЗ 26 В поле "Ваше имя" разрешить ввод только кириллицы а-я ёЁ А-Я и пробелов
+          // * ДЗ 26 В поле "Ваше имя" разрешить ввод только кириллицы а-я ёЁ А-Я и пробелов
           target.value = target.value.replace(/[^а-яё\s]/ig, '');
           
         } else if (elem.name === 'user_message') {
-          // TODO ДЗ 26 В поле В поле "Ваше сообщение" разрешить только кириллицу а-я ёЁ А-Я и пробелов пробелы, цифры 0-9 и знаки препинания , . ! ? : ; - 
+          // * ДЗ 26 В поле В поле "Ваше сообщение" разрешить только кириллицу а-я ёЁ А-Я и пробелов пробелы, цифры 0-9 и знаки препинания , . ! ? : ; - 
           target.value = target.value.replace(/[^а-яё0-9\s\,\.\!\?\:\;\-]/ig, '');
 
         } else if (elem.name === 'user_email') {
-          // todo В поле "email"
+          // * В поле "email"
           // разрешить только ввод латиницы в любом регистре и спецсимволы
           // Собака @  Дефис - Подчеркивание _ Точка. Восклицательный знак! Тильда~ Звездочка * Одинарная кавычка '
 
@@ -521,8 +519,7 @@ window.addEventListener('DOMContentLoaded', function () {
         } else if (elem.name === 'user_phone') {
           // const regexpTelNumber = /([^\d\(\)\-\+])|((?<=.{20,}).)|((?<!^)\++)|((?<=^)\-)|((?<=[\+\-])\-+)|((?<=\([\d\-\)\(]*)\(+)|((?<=\()\)+)|((?<=\)[\d\-\)\(]*)\)+)|((?<=\-)\-+)/ig;
           
-          // TODO ДЗ 26 в поля с номером телефона можно ввести только цифры и знак “+”
-          // !                      [^\d\+]  ((?<=.{12,}).)  (?<!^)\++      
+          // * ДЗ 26 в поля с номером телефона можно ввести только цифры и знак “+”
           const regexpTelNumber = /([^\d\+])|((?<=.{12,}).)|((?<!^)\++)/ig;
           target.value = value.replace(regexpTelNumber, '');
 
@@ -602,7 +599,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 
-  // ! ДЗ 28 Переписать скрипт для отправки данных с формы, используя промисы
+  // ! ДЗ 29 Переписать скрипт для отправки данных с формы, используя Fetch
   // send-ajax-json by using Promise
   const sendForm = (formId) => {
     // * receive formId // string form id
@@ -636,25 +633,33 @@ window.addEventListener('DOMContentLoaded', function () {
     // ! эта функция выполняет действие: отправляет и получает запросы сервера
     // const postData = (body, outputData, errorData) => {
     const postData = (body) => {
-      return new Promise( (resolve, reject) => {
-        const request = new XMLHttpRequest();
 
-        
-        request.addEventListener('readystatechange', () => {
-          if (request.readyState !== 4) {
-            return;
-          }
-          if (request.status === 200) {
-            resolve(); // запрос завершился без ошибок
-          } else {
-            reject(request.status); // была ошибка в запросе
-          }
-        });
-        
-        request.open('POST', '/server.php'); //? method url async=true
-        request.setRequestHeader('Content-Type', 'application/json'); //? заголовок запроса
-        request.send(JSON.stringify(body)); //? POST запрос
-      });
+      // * in fetch
+      return fetch('server.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      }); //fetch запрос
+
+      // * in Promise
+      // return new Promise( (resolve, reject) => {
+      //   const request = new XMLHttpRequest();
+      //   request.addEventListener('readystatechange', () => {
+      //     if (request.readyState !== 4) {
+      //       return;
+      //     }
+      //     if (request.status === 200) {
+      //       resolve(); // запрос завершился без ошибок
+      //     } else {
+      //       reject(request.status); // была ошибка в запросе
+      //     }
+      //   });
+      //   request.open('POST', 'server.php'); //? method url async=true
+      //   request.setRequestHeader('Content-Type', 'application/json'); //? заголовок запроса
+      //   request.send(JSON.stringify(body)); //? POST запрос
+      // });
     }; // postData
 
 
@@ -662,7 +667,7 @@ window.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', (event) => {
       event.preventDefault();
       form.appendChild(statusMessage); // добавить ответ Загрузка... на страницу
-      statusMessage.textContent = loadMessage; // текст сообщения // ??? понятия не имею почему эта строка срабатывает в такой последовательности
+      statusMessage.textContent = loadMessage; // меняем текст статуса
 
       const formData = new FormData(form);
 
@@ -684,21 +689,13 @@ window.addEventListener('DOMContentLoaded', function () {
           console.error('Server Error:', error);
       });
       
-      // postData( body, () => {
-      //     statusMessage.textContent = successMessage;
-      //     console.log('Server Succses');
-      //   }, (error) => {
-      //     statusMessage.textContent = errorMessage;
-      //     console.error('Server Error:', request.status, request.statusText);
-      //   }
-      // );
 
       clearForm(); // очищаем данные полей текущей формы
     }); // * submit form
 
 
-
   }; // * sendForm
+
 
   // * вешаем на каждую форму отдельно по её id
   sendForm('form1'); // user-form main-form
@@ -706,4 +703,3 @@ window.addEventListener('DOMContentLoaded', function () {
   sendForm('form3'); // user-form popup
 
 }); // * DOMContentLoaded *
-
