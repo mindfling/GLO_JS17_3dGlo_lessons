@@ -463,13 +463,11 @@ window.addEventListener('DOMContentLoaded', function () {
           // ? удалить "      " на " "  "------" на "-"
           // ?                         (^[\s\-]+)   (?<=\s)\s+   (?<=\-)\-+  ([\s\-]+$)           
           elem.value = value.replace(/((^[\s\-]+))|((?<=\s)\s+)|((?<=\-)\-+)|([\s\-]+$)/g, '');
-          
 
         } else if (elem.name === 'user_name') {
 
-
           if (value.trim()) {
-            // ? символы кириллицы
+            // ? символы кириллицы тоже что и  /[а-яА-ЯёЁ]+/g
             let words = value.match(/[а-яё]+/ig);
             words = words.map(item => (item.substring(0, 1).toUpperCase() + item.substring(1).toLowerCase()) );
             value = words.join(' ');
@@ -477,19 +475,15 @@ window.addEventListener('DOMContentLoaded', function () {
             // ? value = value.toString().substring(0,1).toUpperCase() + value.toString().substring(1).toLowerCase();
           } else {
             // ? если в поле ввели пустую строку
-            // console.log('value null');
             value = '';
           }
           elem.value = value;
           
         } else if (elem.name === 'user_email') {
-          // удалить @@@@@ 
+          // удалить @@@@@  <>
           elem.value = value.replace(/(?<=@)@+/g, '');
           
         } else if (elem.name === 'user_phone') {
-          // ? удалить ----   ((((   )))) заменить на один
-          // также сделать что-то на подобие шаблона
-          // ? или просто удалить лишние
           //? + плюсик в номере телефона
           //?                     (?<=\()\(       (?<=\))\)       (?<=\-)\-         
           elem.value = value.replace(/((?<=\()\({1,})|((?<=\))\){1,})|((?<=\-)\-{1,})|((?<=\+)\+{1,})/g, '');
@@ -500,47 +494,45 @@ window.addEventListener('DOMContentLoaded', function () {
     };
 
 
-    // * поля ввода в Формах #form1header #form2footer #form3.modal
+    // * событие ввода в Формах #form1header #form2footer #form3.modal
     inputFields.forEach(elem => {
 
       elem.addEventListener('input', (event) => {
         const target = event.target;
         let value = target.value;
 
-        if (elem.name === 'user_name' || elem.name === 'user_message') {
-          // 3) В полях ввода // * "Ваше имя" и "Ваше сообщение" 
-          // разрешить только ввод кириллицы в любом регистре, дефиса и пробела.
-          // запрещаем ввод других символов кроме кириллицы  а-я ёЁ А-Я ' '  '-'
-          target.value = target.value.replace(/[^а-яё\s\-]/ig, '');
+        if (elem.name === 'user_name') { 
+          // TODO ДЗ 26 В поле "Ваше имя" разрешить ввод только кириллицы а-я ёЁ А-Я и пробелов
+          target.value = target.value.replace(/[^а-яё\s]/ig, '');
           
-        } else if (elem.name === 'user_email') {
-          // 4) В поле // * "email"
-          // разрешить только ввод латиницы в любом регистре и спецсимволы
-          // Собака @  Дефис - Подчеркивание _ Точка. 
-          // Восклицательный знак! Тильда~ Звездочка * 
-          // Одинарная кавычка '
-          // target.value = target.value.replace(/[^a-zA-Z@\-\_\.\!\~\*\']/ig, '');
+        } else if (elem.name === 'user_message') {
+          // TODO ДЗ 26 В поле В поле "Ваше сообщение" разрешить только кириллицу а-я ёЁ А-Я и пробелов пробелы, цифры 0-9 и знаки препинания , . ! ? : ; - 
+          target.value = target.value.replace(/[^а-яё0-9\s\,\.\!\?\:\;\-]/ig, '');
 
-          // ? <                                        (?<=^)@+   (?<=@.*)@+            
-          const regexpEmail = /([^a-z@\_\-\.\!\~\*\'])|((?<=^)@+)|((?<=@.*)@+)/ig;
+        } else if (elem.name === 'user_email') {
+          // todo В поле "email"
+          // разрешить только ввод латиницы в любом регистре и спецсимволы
+          // Собака @  Дефис - Подчеркивание _ Точка. Восклицательный знак! Тильда~ Звездочка * Одинарная кавычка '
+
+          // ? <                                           (?<=^)@+   (?<=@.*)@+   (?<=[@\.])[@\.]+            
+          const regexpEmail = /([^a-z@0-9\_\-\.\!\~\*\'])|((?<=^)@+)|((?<=@.*)@+)|((?<=[@\.])[@\.]+)/ig;
           target.value = value.replace(regexpEmail, '');
           
         } else if (elem.name === 'user_phone') {
-          // 5) В поле // * Номер телефона
-          //  разрешить только ввод \d ( ) -  цифр, круглых скобок и дефис
-          // ?                                     ((?<=.{35,}).)  (?<!^)\++  ((?<=^)\-)  (?<=[\+\-])\-+   (?<=\([\d\-\)\(]*)\(+  ((?<=\()\)+)  (?<=\)[\d\-\)\(]*)\)+   (?<=\-)\-+      
-          const regexpTelNumber = /([^\d\(\)\-\+])|((?<=.{35,}).)|((?<!^)\++)|((?<=^)\-)|((?<=[\+\-])\-+)|((?<=\([\d\-\)\(]*)\(+)|((?<=\()\)+)|((?<=\)[\d\-\)\(]*)\)+)|((?<=\-)\-+)/ig;
+          // const regexpTelNumber = /([^\d\(\)\-\+])|((?<=.{20,}).)|((?<!^)\++)|((?<=^)\-)|((?<=[\+\-])\-+)|((?<=\([\d\-\)\(]*)\(+)|((?<=\()\)+)|((?<=\)[\d\-\)\(]*)\)+)|((?<=\-)\-+)/ig;
+          
+          // TODO ДЗ 26 в поля с номером телефона можно ввести только цифры и знак “+”
+          // !                      [^\d\+]  ((?<=.{12,}).)  (?<!^)\++      
+          const regexpTelNumber = /([^\d\+])|((?<=.{12,}).)|((?<!^)\++)/ig;
           target.value = value.replace(regexpTelNumber, '');
 
-          // ? target.value = target.value.replace(/([^\d\(\)\-\+])|((?<!^)\++)|((?<=[\+\-])\-+)|((?<=\)[\d\-\)\(]*)\)+)|((?<=\([\d\-\)\(]*)\(+)|((?<=\-)\-+)/ig, '');
         }
       }); // ? forEach input Listener
 
 
-      // * событие потеря фокуса
       elem.addEventListener('blur', (event) => {
+        // * событие потеря фокуса blur
         const target = event.target;
-        //todo blur
         validateElemOnBlur(target);
         
       }); // ? forEach input Listener
@@ -610,7 +602,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 
-  // ! ДЗ 26 
+  // ! ДЗ 26 Работа с JSON, AJAX. Получение и отправка данных на сервер
   // send-ajax-json
   const sendForm = (formId) => {
     // * receive formId // string form id
@@ -620,44 +612,35 @@ window.addEventListener('DOMContentLoaded', function () {
     const loadMessage = 'Загрузка из сервера . . .';
     const successMessage = 'Спасибо! Данные получены! Мы скоро с Вами свяжемся!';
 
-    // const form = document.getElementById('form1');
     const form = document.getElementById(formId);
     console.log('Подключено form: ', form);
 
     // создаем элемент ответа пользователя
     const statusMessage = document.createElement('div'); // сам элемент
     statusMessage.textContent = loadMessage;  // текст сообщения
-    statusMessage.style.cssText = 'font-size:2rem;color:white;padding:5px 0'; // стили
-
+    statusMessage.style.cssText = 'font-size:1.8rem;color:white;padding:5px 0'; // стили
+    
     const clearForm = () => {
       form.querySelectorAll('input').forEach( item => {
         item.value = '';
       });
-
+      
       // нужно ли очистить и сообщение о внизу через некоторое время // ???
       setTimeout( () => {
         statusMessage.remove();
       }, 7500);
     };
     
-
+    
     //вешаем слушатель на всю форму
     form.addEventListener('submit', (event) => {
       event.preventDefault();
       form.appendChild(statusMessage); // добавить ответ Загрузка... на страницу
+      statusMessage.textContent = loadMessage;  // текст сообщения // ??? понятия не имею почему эта строка срабатывает в такой последовательности
       
-      
-      // работа с формой отдельно!!!!
       const formData = new FormData(form);
 
       let body = {};
-
-      // * variant 1
-      // for (const val of formData.entries()) {
-      //   body[val[0]] = val[1];
-      // }
-
-      // * variant 2
       formData.forEach((val, key) => {
         body[key] = val;
       });
@@ -683,35 +666,29 @@ window.addEventListener('DOMContentLoaded', function () {
     // ! каждая функция должна выполнять свое действие
     const postData = (body, outputData, errorData) => {
       const request = new XMLHttpRequest();
-      // вешаем слушатель на ответ сервера
+      // вешаем слушатель на ответ сервера сразу же после создания запроса
       request.addEventListener('readystatechange', () => {
-        // ** здесь в этом месте пару коммитов назад сообщение Загрузка... не работало ???
 
         if (request.readyState !== 4) {
-          // * здесь сообщений не надо
-          // пока не дойдем до состояния 4 ВЫХОД т.е. в любом другом случае кроме состояния 4 сообщение Загрузка...
+          // пока не дойдем до состояния 4 ВЫХОД
           return;
         }
 
         if (request.status == 200) {
-          // * значит сервер успешно получил и что-то там нам успешно отправил
           outputData();
-
         } else {
           errorData(request.status);
         }
       });
 
-      request.open('POST', '/server.php', true); //? method url login pass
+      request.open('POST', './server.php'); //? method url 
       request.setRequestHeader('Content-Type', 'application/json'); //? заголовок в JSON
-
-      request.send(JSON.stringify(body)); //? POST send json string to Server in body
-    }
+      request.send(JSON.stringify(body)); //? POST отправляем json строку на сервер в body
+    };
 
   };
-  // sendForm();
 
-  // todo
+  // * вешаем на каждую форму отдельно по её id
   sendForm('form1'); // user-form main-form
   sendForm('form2'); // user-form footer-form
   sendForm('form3'); // user-form popup
