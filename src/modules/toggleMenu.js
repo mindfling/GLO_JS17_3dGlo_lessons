@@ -74,5 +74,5 @@ const toggleMenu = (event) => {
   btnMenu.addEventListener('click', handlerMenu); //клик по кнопке .menu
 };
 
-export default toggleMenu;
 
+export default toggleMenu;

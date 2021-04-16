@@ -9,7 +9,6 @@ const sendForm = (formId) => {
 
   // находим форму по строке id
   const form = document.getElementById(formId);
-  console.log('Подключено form: ', form);
 
   // создаем элемент ответа пользователя
   const statusMessage = document.createElement('div');
@@ -61,16 +60,18 @@ const sendForm = (formId) => {
           // отбрасываем ошибку не 200
           throw new Error('Response status code is not a 200');
         }
+        // Server Succses 
+        // 200 это не ошибка
         statusMessage.textContent = successMessage;
-        console.log('Server Succses');
       })
       .catch((error) => {
+        // Server Error запрос завершился ошибкой
         statusMessage.textContent = errorMessage;
-        console.error('Server Error:', error);
       });
 
     clearForm(); // очищаем данные полей текущей формы
   }); // * submit form
+
 }; // * sendForm
 
 

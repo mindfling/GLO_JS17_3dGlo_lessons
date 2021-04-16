@@ -44,10 +44,9 @@ const inputValidation = () => {
       elem.value = value.replace(/(?<=@)@+/g, '');
     } else if (elem.name === 'user_phone') {
       //? + плюсик в номере телефона
-      //?                     (?<=\()\(       (?<=\))\)       (?<=\-)\-
       elem.value = value.replace(/((?<=\()\({1,})|((?<=\))\){1,})|((?<=\-)\-{1,})|((?<=\+)\+{1,})/g, '');
     } else {
-      //console.log('other input был ввод в другое поле');
+      // other input был ввод в другое поле 
     }
   };
 

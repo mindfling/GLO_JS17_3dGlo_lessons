@@ -110,4 +110,5 @@ const togglePopUp = () => {
   popupContent.style.left = 50 - (310 * 50) / window.innerWidth + '%';
 };
 
+
 export default togglePopUp;
