@@ -595,8 +595,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 
-  // ! ДЗ 29 Переписать скрипт для отправки данных с формы, используя Fetch
-  // send-ajax-json by using Promise
+  //! Переписать скрипт для отправки данных с формы, используя Fetch
   const sendForm = (formId) => {
     // * receive formId // string form id
 
