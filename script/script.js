@@ -634,29 +634,29 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
     // ! эта функция выполняет действие: отправляет и получает запросы сервера
-    const postData = (body, outputData, errorData) => {
-      const request = new XMLHttpRequest();
-      // вешаем слушатель на ответ сервера сразу же после создания запроса
-      request.addEventListener('readystatechange', () => {
+    // const postData = (body, outputData, errorData) => {
+    const postData = (body) => {
+      return new Promise( (resolve, reject) => {
+        const request = new XMLHttpRequest();
 
-        if (request.readyState !== 4) {
-          // пока не дойдем до состояния 4 ВЫХОД
-          return;
-        }
-
-        if (request.status == 200) {
-          outputData();
-        } else {
-          errorData(request.status);
-        }
+        
+        request.addEventListener('readystatechange', () => {
+          if (request.readyState !== 4) {
+            return;
+          }
+          if (request.status === 200) {
+            resolve(); // запрос завершился без ошибок
+          } else {
+            reject(request.status); // была ошибка в запросе
+          }
+        });
+        
+        request.open('POST', '/server.php'); //? method url async=true
+        request.setRequestHeader('Content-Type', 'application/json'); //? заголовок запроса
+        request.send(JSON.stringify(body)); //? POST запрос
       });
+    }; // postData
 
-      request.open('POST', './server.php'); //? method url 
-      request.setRequestHeader('Content-Type', 'application/json'); //? заголовок в JSON
-      request.send(JSON.stringify(body)); //? POST отправляем json строку на сервер в body
-    };
-
-    
 
     //вешаем слушатель на всю форму
     form.addEventListener('submit', (event) => {
@@ -672,23 +672,29 @@ window.addEventListener('DOMContentLoaded', function () {
         body[key] = val;
       });
 
+
       // * работаем с запросом к серверу здесь
-      postData(body,
-        () => {
+      postData(body)
+      .then( () => {
           statusMessage.textContent = successMessage;
           console.log('Server Succses');
-        },
-        (error) => {
+      })
+      .catch( (error) => {
           statusMessage.textContent = errorMessage;
-          console.error('Server Error:', request.status, request.statusText);
-        }
-      );
+          console.error('Server Error:', error);
+      });
+      
+      // postData( body, () => {
+      //     statusMessage.textContent = successMessage;
+      //     console.log('Server Succses');
+      //   }, (error) => {
+      //     statusMessage.textContent = errorMessage;
+      //     console.error('Server Error:', request.status, request.statusText);
+      //   }
+      // );
 
       clearForm(); // очищаем данные полей текущей формы
-    });
-
-
-
+    }); // * submit form
 
 
 
