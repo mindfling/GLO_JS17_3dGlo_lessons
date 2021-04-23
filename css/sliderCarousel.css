@@ -1,0 +1,37 @@
+.glo-slider {
+    overflow: hidden;
+}
+.glo-slider__wrap {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    translate: transform 0.5s;
+    will-change: transform;
+}
+.glo-slider__item {
+    flex: 0 0 25%;
+    margin: auto 0;
+}
+
+
+.glo-slider__prev,
+.glo-slider__next {
+    margin: 0 12px;
+    border: 20px solid transparent;
+    background: transparent;
+}
+.glo-slider__next {
+    border-left-color: #19b5fe;
+}
+.glo-slider__prev {
+    border-right-color: #19b5fe;
+}
+
+.glo-slider__next:hover,
+.glo-slider__prev:hover,
+.glo-slider__next:focus,
+.glo-slider__prev:focus {
+    background: transparent;
+    outline: transparent;
+}
+
